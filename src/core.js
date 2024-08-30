@@ -59,6 +59,7 @@ class Kuroshiro {
      * @param {Object} [options] Settings Object
      * @param {string} [options.to="hiragana"] Target syllabary ["hiragana"|"katakana"|"romaji"]
      * @param {string} [options.mode="normal"] Convert mode ["normal"|"spaced"|"okurigana"|"furigana"]
+     * @param {string} [options.includeKatakana=false] Whether to include Katakana in Furigana mode
      * @param {string} [options.romajiSystem="hepburn"] Romanization System ["nippon"|"passport"|"hepburn"]
      * @param {string} [options.delimiter_start="("] Delimiter(Start)
      * @param {string} [options.delimiter_end=")"] Delimiter(End)
@@ -68,6 +69,7 @@ class Kuroshiro {
         options = options || {};
         options.to = options.to || "hiragana";
         options.mode = options.mode || "normal";
+        options.includeKatakana = options.includeKatakana || false;
         options.romajiSystem = options.romajiSystem || ROMANIZATION_SYSTEM.HEPBURN;
         options.delimiter_start = options.delimiter_start || "(";
         options.delimiter_end = options.delimiter_end || ")";
@@ -276,11 +278,16 @@ class Kuroshiro {
                     }
                     else { // furigana
                         for (let n5 = 0; n5 < notations.length; n5++) {
-                            if (notations[n5][1] !== 1) {
-                                result += notations[n5][0];
+                            const isKatakanaLocal = notations[n5][0] !== notations[n5][2];
+                            const shouldUseRuby = (options.includeKatakana && isKatakanaLocal);
+
+                            const isKanjiLocal = notations[n5][1] === 1;
+
+                            if (shouldUseRuby || isKanjiLocal) {
+                                result += `<ruby>${notations[n5][0]}<rp>${options.delimiter_start}</rp><rt>${notations[n5][2]}</rt><rp>${options.delimiter_end}</rp></ruby>`;
                             }
                             else {
-                                result += `<ruby>${notations[n5][0]}<rp>${options.delimiter_start}</rp><rt>${notations[n5][2]}</rt><rp>${options.delimiter_end}</rp></ruby>`;
+                                result += notations[n5][0];
                             }
                         }
                     }

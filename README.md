@@ -138,6 +138,7 @@ __Arguments__
 |---|---|---|---|
 | to | String | "hiragana" | Target syllabary [`hiragana`, `katakana`, `romaji`] |
 | mode | String | "normal" | Convert mode [`normal`, `spaced`, `okurigana`, `furigana`] |
+| includeKatakana | boolean | false | Whether to include Katakana in Furigana mode |
 | romajiSystem<sup>*</sup> | String | "hepburn" | Romanization system [`nippon`, `passport`, `hepburn`] |
 | delimiter_start | String | "(" | Delimiter(Start) |
 | delimiter_end | String | ")" | Delimiter(End) |

@@ -21,7 +21,8 @@
       "prefer-destructuring": 0,
       "func-names": 0,
       "camelcase": 0,
-      "no-cond-assign": 0
+      "no-cond-assign": 0,
+      "linebreak-style": 0
     },
     "extends": "airbnb-base",
     "env": {
@@ -30,4 +31,4 @@
       "browser": true,
       "jest": true
     }
-  }
+}
