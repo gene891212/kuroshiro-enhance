@@ -10,6 +10,16 @@
 
 kuroshiro is a Japanese language library for converting Japanese sentence to Hiragana, Katakana or Romaji with furigana and okurigana modes supported.
 
+kuroshiro-enhance is a fork of the original kuroshiro, a Japanese language library for converting Japanese sentences to Hiragana, Katakana, or Romaji with furigana and okurigana modes supported.
+
+## What's New in kuroshiro-enhance?
+
+In this enhanced version, a new option includeKatakana has been added to the `convert(str, [options])` API, providing more control over how Katakana characters are handled in Furigana mode. This feature allows users to choose whether or not Katakana characters should be included when converting Japanese text with furigana.
+
+### New Feature Overview:
+
+- includeKatakana: A boolean option that lets you control the inclusion of Katakana in Furigana mode. (Default: false)
+
 *Read this in other languages: [English](README.md), [日本語](README.jp.md), [简体中文](README.zh-cn.md), [繁體中文](README.zh-tw.md), [Esperanto](README.eo-eo.md).*
 
 ## Demo
@@ -40,7 +50,7 @@ You can check the demo [here](https://kuroshiro.org/#demo).
 ### Node.js (or using a module bundler (e.g. Webpack))
 Install with npm package manager:
 ```sh
-$ npm install kuroshiro
+$ npm install kuroshiro-enhance
 ```
     
 Load the library:
@@ -48,7 +58,7 @@ Load the library:
 *Support ES6 Module `import`*
 
 ```js
-import Kuroshiro from "kuroshiro";
+import Kuroshiro from "kuroshiro-enhance";
 // Initialize kuroshiro with an instance of analyzer (You could check the [apidoc](#initanalyzer) for more information):
 // For this example, you should npm install and import the kuromoji analyzer first
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
@@ -64,7 +74,7 @@ const result = await kuroshiro.convert("感じ取れたら手を繋ごう、重�
 *And CommonJS `require`*
 
 ```js
-const Kuroshiro = require("kuroshiro")；
+const Kuroshiro = require("kuroshiro-enhance")；
 const KuromojiAnalyzer = require("kuroshiro-analyzer-kuromoji");
 const kuroshiro = new Kuroshiro();
 
@@ -138,7 +148,7 @@ __Arguments__
 |---|---|---|---|
 | to | String | "hiragana" | Target syllabary [`hiragana`, `katakana`, `romaji`] |
 | mode | String | "normal" | Convert mode [`normal`, `spaced`, `okurigana`, `furigana`] |
-| includeKatakana | boolean | false | Whether to include Katakana in Furigana mode |
+| includeKatakana | boolean | false | Whether to include Katakana in Furigana mode **(Newly added!)** |
 | romajiSystem<sup>*</sup> | String | "hepburn" | Romanization system [`nippon`, `passport`, `hepburn`] |
 | delimiter_start | String | "(" | Delimiter(Start) |
 | delimiter_end | String | ")" | Delimiter(End) |
