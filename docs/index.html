@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuroshiro-enhance Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            container-type: inline-size;
+            container-name: page;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .github-link {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .github-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .github-link a:hover {
+            text-decoration: underline;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        #result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border: 2px solid #e0e0e0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            min-height: 80px;
+            white-space: pre-wrap;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 2px solid #e0e0e0;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        /* Style for furigana */
+        ruby {
+            line-height: 2.5;
+        }
+
+        rt {
+            font-size: 0.6em;
+            font-weight: normal;
+            line-height: 0.5em;
+        }
+
+        ruby>rb {
+            font-size: 1em;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .option-group.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .option-group.disabled label {
+            color: #999;
+        }
+
+        .option-group.disabled select {
+            background-color: #f5f5f5;
+            color: #999;
+            border-color: #ddd;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🎌 Kuroshiro-enhance Demo</h1>
+        <p class="subtitle">A powerful Japanese text conversion library</p>
+
+        <div class="github-link">
+            <a href="https://github.com/gene891212/kuroshiro" target="_blank">
+                📖 View on GitHub
+            </a>
+        </div>
+
+        <div>
+            <label for="inputText">輸入日文文本 (Enter Japanese Text):</label>
+            <textarea id="inputText" rows="4" placeholder="ここに日本語の文章を入力してください。">
+壁の写真 錆びたフレーム
+空の花瓶 あの日のままで
+捨てられない 古びたテディベア
+擦り切れたネイビーのコート</textarea>
+        </div>
+
+        <div class="options">
+            <div class="option-group">
+                <label for="targetSyllabary">轉換目標 (To):</label>
+                <select id="targetSyllabary">
+                    <option value="hiragana">ひらがな (Hiragana)</option>
+                    <option value="katakana">カタカナ (Katakana)</option>
+                    <option value="romaji">Romaji</option>
+                </select>
+            </div>
+            <div class="option-group">
+                <label for="conversionMode">模式 (Mode):</label>
+                <select id="conversionMode">
+                    <option value="furigana">ふりがな (Furigana)</option>
+                    <option value="normal">ノーマル (Normal)</option>
+                    <option value="spaced">スペース入り (Spaced)</option>
+                </select>
+            </div>
+            <div class="option-group" id="includeKatakanaGroup">
+                <label for="includeKatakana">包含片假名 (Include Katakana):</label>
+                <select id="includeKatakana">
+                    <option value="false">否 (No)</option>
+                    <option value="true">是 (Yes)</option>
+                </select>
+                <small style="color: #666; font-size: 0.85em; margin-top: 0.25rem;">
+                    僅在振り仮名模式下有效 (Only effective in Furigana mode)
+                </small>
+            </div>
+        </div>
+
+        <button id="convertBtn" disabled>初始化中... (Initializing...)</button>
+
+        <div id="result" class="loading">載入中... (Loading...)</div>
+    </div>
+
+    <!-- Load Kuroshiro-enhance and Kuromoji Analyzer -->
+    <script src="https://unpkg.com/kuroshiro-enhance@latest/dist/kuroshiro.min.js"></script>
+    <script src="https://unpkg.com/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 處理 UMD 模組的預設導出
+            const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
+            const kuroshiro = new KuroshiroClass();
+            const convertBtn = document.getElementById('convertBtn');
+            const inputText = document.getElementById('inputText');
+            const resultDiv = document.getElementById('result');
+            const targetSyllabary = document.getElementById('targetSyllabary');
+            const conversionMode = document.getElementById('conversionMode');
+            const includeKatakana = document.getElementById('includeKatakana');
+            const includeKatakanaGroup = document.getElementById('includeKatakanaGroup');
+
+            // Function to update includeKatakana availability
+            function updateIncludeKatakanaAvailability() {
+                const isFuriganaMode = conversionMode.value === 'furigana';
+                if (isFuriganaMode) {
+                    includeKatakanaGroup.classList.remove('disabled');
+                } else {
+                    includeKatakanaGroup.classList.add('disabled');
+                    // Reset to default value when disabled
+                    includeKatakana.value = 'false';
+                }
+            }
+
+            // Initialize Kuroshiro
+            const base = window.location.pathname.replace(/\/$/, '');
+            kuroshiro.init(new KuromojiAnalyzer({ dictPath: base + '/dict/' }))
+                .then(() => {
+                    convertBtn.disabled = false;
+                    convertBtn.textContent = '轉換 (Convert)';
+                    console.log('Kuroshiro has been initialized.');
+                    // Initialize UI state
+                    updateIncludeKatakanaAvailability();
+                    // Perform an initial conversion
+                    performConversion();
+                })
+                .catch(err => {
+                    resultDiv.className = 'error';
+                    resultDiv.textContent = '初始化失敗 (Initialization Failed): ' + err.message;
+                    console.error(err);
+                });
+
+            function performConversion() {
+                const text = inputText.value;
+                if (!text) {
+                    resultDiv.innerHTML = '';
+                    resultDiv.className = '';
+                    return;
+                }
+
+                resultDiv.className = 'loading';
+                resultDiv.textContent = '轉換中... (Converting...)';
+
+                const options = {
+                    to: targetSyllabary.value,
+                    mode: conversionMode.value,
+                    romajiSystem: 'hepburn', // Or 'nippon', 'passport'
+                };
+
+                // Only include includeKatakana option when in furigana mode
+                if (conversionMode.value === 'furigana') {
+                    options.includeKatakana = includeKatakana.value === 'true';
+                }
+
+                kuroshiro.convert(text, options)
+                    .then(result => {
+                        // When using furigana mode, the result is HTML.
+                        // For other modes, it's plain text.
+                        resultDiv.className = '';
+                        resultDiv.innerHTML = result;
+                    })
+                    .catch(err => {
+                        resultDiv.className = 'error';
+                        resultDiv.textContent = 'Error: ' + err.message;
+                        console.error(err);
+                    });
+            }
+
+            // Add event listeners
+            convertBtn.addEventListener('click', performConversion);
+            inputText.addEventListener('input', performConversion);
+            targetSyllabary.addEventListener('change', performConversion);
+            conversionMode.addEventListener('change', () => {
+                updateIncludeKatakanaAvailability();
+                performConversion();
+            });
+            includeKatakana.addEventListener('change', performConversion);
+        });
+    </script>
+
+</body>
+
+</html>

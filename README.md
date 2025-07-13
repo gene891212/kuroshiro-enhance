@@ -1,6 +1,6 @@
 ![kuroshiro](https://kuroshiro.org/kuroshiro.png)
 
-# kuroshiro
+# kuroshiro-enhance
 
 [![Build Status](https://travis-ci.org/hexenq/kuroshiro.svg?branch=master)](https://travis-ci.org/hexenq/kuroshiro)
 [![Coverage Status](https://coveralls.io/repos/hexenq/kuroshiro/badge.svg)](https://coveralls.io/r/hexenq/kuroshiro)
