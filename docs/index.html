@@ -5,15 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kuroshiro-enhance Demo</title>
+    <link rel="icon" type="image/svg+xml" href="/kuroshiro-enhance/favicon.svg">
     <style>
+        /* 定義字體變數 */
+        :root {
+            --font-chinese: 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-japanese: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Yu Gothic', 'Meiryo', sans-serif;
+        }
+
+        /* 繁體中文字體 - 用於介面文字 */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: var(--font-chinese);
             container-type: inline-size;
             container-name: page;
             padding: 1rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             margin: 0;
+        }
+
+        /* 日文字體類別 - 用於日文內容 */
+        .japanese-text {
+            font-family: var(--font-japanese);
         }
 
         .container {
@@ -52,6 +65,7 @@
             text-decoration: underline;
         }
 
+        /* 日文輸入和顯示區域 */
         textarea {
             width: 100%;
             min-height: 120px;
@@ -60,7 +74,7 @@
             border: 2px solid #e0e0e0;
             margin-bottom: 1rem;
             font-size: 1rem;
-            font-family: inherit;
+            font-family: var(--font-japanese);
             transition: border-color 0.3s ease;
             box-sizing: border-box;
             resize: vertical;
@@ -95,6 +109,7 @@
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
         }
 
+        /* 日文結果顯示區域 */
         #result {
             margin-top: 2rem;
             padding: 1.5rem;
@@ -105,6 +120,7 @@
             white-space: pre-wrap;
             font-size: 1.2rem;
             line-height: 1.6;
+            font-family: var(--font-japanese);
         }
 
         .options {
@@ -140,7 +156,13 @@
             border-color: #007bff;
         }
 
-        /* Style for furigana */
+        /* 日文振り仮名樣式 */
+        ruby,
+        rt,
+        ruby>rb {
+            font-family: var(--font-japanese);
+        }
+
         ruby {
             line-height: 2.5;
         }
@@ -184,6 +206,39 @@
             border-color: #ddd;
         }
 
+        .result-container {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: auto;
+            display: inline-block;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .copy-btn.copied {
+            background: #17a2b8;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
@@ -210,7 +265,7 @@
 
         <div>
             <label for="inputText">輸入日文文本 (Enter Japanese Text):</label>
-            <textarea id="inputText" rows="4" placeholder="ここに日本語の文章を入力してください。">
+            <textarea id="inputText" rows="4" placeholder="ここに日本語の文章を入力してください。" class="japanese-text">
 壁の写真 錆びたフレーム
 空の花瓶 あの日のままで
 捨てられない 古びたテディベア
@@ -221,17 +276,17 @@
             <div class="option-group">
                 <label for="targetSyllabary">轉換目標 (To):</label>
                 <select id="targetSyllabary">
-                    <option value="hiragana">ひらがな (Hiragana)</option>
-                    <option value="katakana">カタカナ (Katakana)</option>
+                    <option value="hiragana"><span class="japanese-text">ひらがな</span> (Hiragana)</option>
+                    <option value="katakana"><span class="japanese-text">カタカナ</span> (Katakana)</option>
                     <option value="romaji">Romaji</option>
                 </select>
             </div>
             <div class="option-group">
                 <label for="conversionMode">模式 (Mode):</label>
                 <select id="conversionMode">
-                    <option value="furigana">ふりがな (Furigana)</option>
-                    <option value="normal">ノーマル (Normal)</option>
-                    <option value="spaced">スペース入り (Spaced)</option>
+                    <option value="furigana"><span class="japanese-text">ふりがな</span> (Furigana)</option>
+                    <option value="normal"><span class="japanese-text">ノーマル</span> (Normal)</option>
+                    <option value="spaced"><span class="japanese-text">スペース入り</span> (Spaced)</option>
                 </select>
             </div>
             <div class="option-group" id="includeKatakanaGroup">
@@ -241,14 +296,17 @@
                     <option value="true">是 (Yes)</option>
                 </select>
                 <small style="color: #666; font-size: 0.85em; margin-top: 0.25rem;">
-                    僅在振り仮名模式下有效 (Only effective in Furigana mode)
+                    僅在<span class="japanese-text">振り仮名</span>模式下有效 (Only effective in Furigana mode)
                 </small>
             </div>
         </div>
 
         <button id="convertBtn" disabled>初始化中... (Initializing...)</button>
 
-        <div id="result" class="loading">載入中... (Loading...)</div>
+        <div class="result-container">
+            <button id="copyBtn" class="copy-btn" style="display: none;">📋 複製 Ruby</button>
+            <div id="result" class="loading">載入中... (Loading...)</div>
+        </div>
     </div>
 
     <!-- Load Kuroshiro-enhance and Kuromoji Analyzer -->
@@ -267,6 +325,39 @@
             const conversionMode = document.getElementById('conversionMode');
             const includeKatakana = document.getElementById('includeKatakana');
             const includeKatakanaGroup = document.getElementById('includeKatakanaGroup');
+            const copyBtn = document.getElementById('copyBtn');
+
+            let lastResult = '';
+
+            // Function to copy ruby text to clipboard
+            function copyRubyToClipboard() {
+                if (!lastResult) return;
+
+                navigator.clipboard.writeText(lastResult).then(() => {
+                    copyBtn.textContent = '✅ 已複製!';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = '📋 複製 Ruby';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('複製失敗:', err);
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = lastResult;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+
+                    copyBtn.textContent = '✅ 已複製!';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = '📋 複製 Ruby';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                });
+            }
 
             // Function to update includeKatakana availability
             function updateIncludeKatakanaAvailability() {
@@ -303,11 +394,14 @@
                 if (!text) {
                     resultDiv.innerHTML = '';
                     resultDiv.className = '';
+                    copyBtn.style.display = 'none';
+                    lastResult = '';
                     return;
                 }
 
                 resultDiv.className = 'loading';
                 resultDiv.textContent = '轉換中... (Converting...)';
+                copyBtn.style.display = 'none';
 
                 const options = {
                     to: targetSyllabary.value,
@@ -326,16 +420,25 @@
                         // For other modes, it's plain text.
                         resultDiv.className = '';
                         resultDiv.innerHTML = result;
+                        lastResult = result;
+
+                        // Show copy button if there's a result
+                        if (result.trim()) {
+                            copyBtn.style.display = 'block';
+                        }
                     })
                     .catch(err => {
                         resultDiv.className = 'error';
                         resultDiv.textContent = 'Error: ' + err.message;
+                        copyBtn.style.display = 'none';
+                        lastResult = '';
                         console.error(err);
                     });
             }
 
             // Add event listeners
             convertBtn.addEventListener('click', performConversion);
+            copyBtn.addEventListener('click', copyRubyToClipboard);
             inputText.addEventListener('input', performConversion);
             targetSyllabary.addEventListener('change', performConversion);
             conversionMode.addEventListener('change', () => {
