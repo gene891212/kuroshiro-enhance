@@ -20,10 +20,26 @@ In this enhanced version, a new option includeKatakana has been added to the `co
 
 - includeKatakana: A boolean option that lets you control the inclusion of Katakana in Furigana mode. (Default: false)
 
+#### Example Usage:
+
+__Input text:__ 
+
+古びたテディベア
+
+__With `includeKatakana: false` (Default):__
+
+<ruby>古<rp>(</rp><rt>ふる</rt><rp>)</rp></ruby>びたテディベア
+
+__With `includeKatakana: true`:__
+
+<ruby>古<rp>(</rp><rt>ふる</rt><rp>)</rp></ruby>びた<ruby>テ<rp>(</rp><rt>て</rt><rp>)</rp></ruby><ruby>デ<rp>(</rp><rt>で</rt><rp>)</rp></ruby><ruby>ィ<rp>(</rp><rt>ぃ</rt><rp>)</rp></ruby><ruby>ベ<rp>(</rp><rt>べ</rt><rp>)</rp></ruby><ruby>ア<rp>(</rp><rt>あ</rt><rp>)</rp></ruby>
+
+As you can see, when `includeKatakana` is set to `true`, katakana characters like "テディベア" also get furigana annotations, showing their hiragana readings. When set to `false` (default), katakana characters are left as-is without furigana.
+
 *Read this in other languages: [English](README.md), [日本語](README.jp.md), [简体中文](README.zh-cn.md), [繁體中文](README.zh-tw.md), [Esperanto](README.eo-eo.md).*
 
 ## Demo
-You can check the demo [here](https://kuroshiro.org/#demo).
+You can check the demo [here](https://gene891212.github.io/kuroshiro-enhance).
 
 ## Feature
 - Japanese Sentence => Hiragana, Katakana or Romaji
