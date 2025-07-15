@@ -258,11 +258,16 @@ class Kuroshiro {
                         }
                     }
                     else { // furigana
-                        result += "<ruby>";
                         for (let n3 = 0; n3 < notations.length; n3++) {
-                            result += `${notations[n3][0]}<rp>${options.delimiter_start}</rp><rt>${toRawRomaji(notations[n3][3], options.romajiSystem)}</rt><rp>${options.delimiter_end}</rp>`;
+                            if (notations[n3][1] === 3) {
+                                // For non-Japanese characters (like punctuation), don't add ruby
+                                result += notations[n3][0];
+                            }
+                            else {
+                                // For all Japanese characters (kanji and kana), add ruby with romaji
+                                result += `<ruby>${notations[n3][0]}<rp>${options.delimiter_start}</rp><rt>${toRawRomaji(notations[n3][3], options.romajiSystem)}</rt><rp>${options.delimiter_end}</rp></ruby>`;
+                            }
                         }
-                        result += "</ruby>";
                     }
                     return result;
                 case "hiragana":
