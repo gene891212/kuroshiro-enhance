@@ -180,9 +180,30 @@
         }
 
         .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
             text-align: center;
             color: #666;
             font-style: italic;
+        }
+
+        .loading::before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #666;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .error {
@@ -267,7 +288,7 @@
 
         <div>
             <label for="inputText">輸入日文文本 (Enter Japanese Text):</label>
-            <textarea id="inputText" rows="4" placeholder="ここに日本語の文章を入力してください。" class="japanese-text">
+            <textarea id="inputText" rows="4" placeholder="ここに日本語の文章を入力してください。" class="japanese-text" disabled>
 壁の写真 錆びたフレーム
 空の花瓶 あの日のままで
 捨てられない 古びたテディベア
@@ -277,7 +298,7 @@
         <div class="options">
             <div class="option-group">
                 <label for="targetSyllabary">轉換目標 (To):</label>
-                <select id="targetSyllabary">
+                <select id="targetSyllabary" disabled>
                     <option value="hiragana"><span class="japanese-text">ひらがな</span> (Hiragana)</option>
                     <option value="katakana"><span class="japanese-text">カタカナ</span> (Katakana)</option>
                     <option value="romaji">Romaji</option>
@@ -285,7 +306,7 @@
             </div>
             <div class="option-group">
                 <label for="conversionMode">模式 (Mode):</label>
-                <select id="conversionMode">
+                <select id="conversionMode" disabled>
                     <option value="furigana"><span class="japanese-text">ふりがな</span> (Furigana)</option>
                     <option value="normal"><span class="japanese-text">ノーマル</span> (Normal)</option>
                     <option value="spaced"><span class="japanese-text">スペース入り</span> (Spaced)</option>
@@ -293,7 +314,7 @@
             </div>
             <div class="option-group" id="includeKatakanaGroup">
                 <label for="includeKatakana">包含片假名 (Include Katakana):</label>
-                <select id="includeKatakana">
+                <select id="includeKatakana" disabled>
                     <option value="false">否 (No)</option>
                     <option value="true">是 (Yes)</option>
                 </select>
@@ -380,6 +401,13 @@
                 .then(() => {
                     convertBtn.disabled = false;
                     convertBtn.textContent = '轉換 (Convert)';
+
+                    // Enable form elements
+                    inputText.disabled = false;
+                    targetSyllabary.disabled = false;
+                    conversionMode.disabled = false;
+                    includeKatakana.disabled = false;
+
                     console.log('Kuroshiro has been initialized.');
                     // Initialize UI state
                     updateIncludeKatakanaAvailability();
