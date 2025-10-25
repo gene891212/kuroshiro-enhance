@@ -14,11 +14,12 @@ kuroshiro-enhance is a fork of the original kuroshiro, a Japanese language libra
 
 ## What's New in kuroshiro-enhance?
 
-In this enhanced version, a new option includeKatakana has been added to the `convert(str, [options])` API, providing more control over how Katakana characters are handled in Furigana mode. This feature allows users to choose whether or not Katakana characters should be included when converting Japanese text with furigana.
+In this enhanced version, we've added powerful new features to the `convert(str, [options])` API, providing more control and flexibility when working with Japanese text conversion.
 
-### New Feature Overview:
+### New Features Overview:
 
-- includeKatakana: A boolean option that lets you control the inclusion of Katakana in Furigana mode. (Default: false)
+- **includeKatakana**: A boolean option that lets you control the inclusion of Katakana in Furigana mode. (Default: false)
+- **furigana_map mode**: A new conversion mode that returns a structured object with text and ruby annotation positions, perfect for programmatic processing and custom rendering.
 
 #### Example Usage:
 
@@ -35,6 +36,39 @@ __With `includeKatakana: true`:__
 <ruby>古<rp>(</rp><rt>ふる</rt><rp>)</rp></ruby>びた<ruby>テ<rp>(</rp><rt>て</rt><rp>)</rp></ruby><ruby>デ<rp>(</rp><rt>で</rt><rp>)</rp></ruby><ruby>ィ<rp>(</rp><rt>ぃ</rt><rp>)</rp></ruby><ruby>ベ<rp>(</rp><rt>べ</rt><rp>)</rp></ruby><ruby>ア<rp>(</rp><rt>あ</rt><rp>)</rp></ruby>
 
 As you can see, when `includeKatakana` is set to `true`, katakana characters like "テディベア" also get furigana annotations, showing their hiragana readings. When set to `false` (default), katakana characters are left as-is without furigana.
+
+### New Mode: furigana_map
+
+The new `furigana_map` mode returns a structured JSON object instead of HTML, making it easier to process and render ruby annotations programmatically.
+
+__Input text:__ 
+
+胸に閉じ込めた
+
+__With `mode: "furigana_map"`:__
+
+```json
+{
+  "text": "胸に閉じ込めた",
+  "ruby": [
+    { "s": 0, "e": 1, "rt": "むね" },
+    { "s": 2, "e": 4, "rt": "とじこ" },
+    { "s": 5, "e": 6, "rt": "こ" }
+  ]
+}
+```
+
+- `text`: The original text
+- `ruby`: An array of ruby annotations
+  - `s`: Start position (inclusive)
+  - `e`: End position (exclusive)
+  - `rt`: Ruby text (reading)
+
+This format is particularly useful when you need to:
+- Build custom rendering logic
+- Integrate with frontend frameworks (React, Vue, etc.)
+- Process ruby annotations programmatically
+- Store furigana data in a structured format
 
 *Read this in other languages: [English](README.md), [日本語](README.jp.md), [简体中文](README.zh-cn.md), [繁體中文](README.zh-tw.md), [Esperanto](README.eo-eo.md).*
 
@@ -163,8 +197,8 @@ __Arguments__
 | Options | Type | Default | Description |
 |---|---|---|---|
 | to | String | "hiragana" | Target syllabary [`hiragana`, `katakana`, `romaji`] |
-| mode | String | "normal" | Convert mode [`normal`, `spaced`, `okurigana`, `furigana`] |
-| includeKatakana | boolean | false | Whether to include Katakana in Furigana mode **(Newly added!)** |
+| mode | String | "normal" | Convert mode [`normal`, `spaced`, `okurigana`, `furigana`, `furigana_map`] **(Updated!)** |
+| includeKatakana | boolean | false | Whether to include Katakana in Furigana/Furigana Map mode **(New!)** |
 | romajiSystem<sup>*</sup> | String | "hepburn" | Romanization system [`nippon`, `passport`, `hepburn`] |
 | delimiter_start | String | "(" | Delimiter(Start) |
 | delimiter_end | String | ")" | Delimiter(End) |
@@ -196,6 +230,21 @@ await kuroshiro.convert("感じ取れたら手を繋ごう、重なるのは人�
 await kuroshiro.convert("感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！", {mode:"furigana", to:"hiragana"});
 // result: <ruby>感<rp>(</rp><rt>かん</rt><rp>)</rp></ruby>じ<ruby>取<rp>(</rp><rt>と</rt><rp>)</rp></ruby>れたら<ruby>手<rp>(</rp><rt>て</rt><rp>)</rp></ruby>を<ruby>繋<rp>(</rp><rt>つな</rt><rp>)</rp></ruby>ごう、<ruby>重<rp>(</rp><rt>かさ</rt><rp>)</rp></ruby>なるのは<ruby>人生<rp>(</rp><rt>じんせい</rt><rp>)</rp></ruby>のライン and レミリア<ruby>最高<rp>(</rp><rt>さいこう</rt><rp>)</rp></ruby>！
 </pre>
+
+```js
+// furigana_map (New!)
+await kuroshiro.convert("感じ取れたら手を繋ごう", {mode:"furigana_map", to:"hiragana"});
+// result: 
+{
+  "text": "感じ取れたら手を繋ごう",
+  "ruby": [
+    { "s": 0, "e": 1, "rt": "かん" },
+    { "s": 2, "e": 3, "rt": "と" },
+    { "s": 6, "e": 7, "rt": "て" },
+    { "s": 9, "e": 10, "rt": "つな" }
+  ]
+}
+```
 
 ### Utils
 __Examples__

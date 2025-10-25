@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,6 +11,12 @@
         :root {
             --font-chinese: 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             --font-japanese: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Yu Gothic', 'Meiryo', sans-serif;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --border-color: #e1e8ed;
+            --bg-light: #f8f9fa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a5568;
         }
 
         /* 繁體中文字體 - 用於介面文字 */
@@ -18,8 +24,8 @@
             font-family: var(--font-chinese);
             container-type: inline-size;
             container-name: page;
-            padding: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0;
+            background: #f5f7fa;
             min-height: 100vh;
             margin: 0;
         }
@@ -30,39 +36,44 @@
         }
 
         .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            min-height: 100vh;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
             text-align: center;
-            color: #666;
-            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 400;
         }
 
         .github-link {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .github-link a {
-            color: #007bff;
+            color: var(--accent-color);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 400;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
 
         .github-link a:hover {
-            text-decoration: underline;
+            opacity: 0.7;
         }
 
         /* 日文輸入和顯示區域 */
@@ -70,43 +81,44 @@
             width: 100%;
             min-height: 120px;
             padding: 1rem;
-            border-radius: 8px;
-            border: 2px solid #e0e0e0;
-            margin-bottom: 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
             font-size: 1rem;
             font-family: var(--font-japanese);
-            transition: border-color 0.3s ease;
+            transition: border-color 0.2s;
             box-sizing: border-box;
             resize: vertical;
+            background: white;
         }
 
         textarea:focus {
             outline: none;
-            border-color: #007bff;
+            border-color: var(--accent-color);
         }
 
         button {
             display: block;
             width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            padding: 0.875rem;
+            background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: opacity 0.2s;
         }
 
         button:disabled {
-            background: #ccc;
+            background: #bdc3c7;
             cursor: not-allowed;
+            opacity: 0.7;
         }
 
         button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+            opacity: 0.9;
         }
 
         /* 日文結果顯示區域 */
@@ -114,15 +126,36 @@
             margin-top: 2rem;
             padding: 1.5rem;
             padding-top: 3rem;
-            border: 2px solid #e0e0e0;
-            background: #f8f9fa;
-            border-radius: 8px;
-            min-height: 80px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-light);
+            border-radius: 4px;
+            min-height: 100px;
             white-space: pre-wrap;
-            font-size: 1.2rem;
-            line-height: 1.6;
+            font-size: 1.1rem;
+            line-height: 2;
             font-family: var(--font-japanese);
             margin-bottom: 1rem;
+        }
+
+        #result.json-mode {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            overflow-x: auto;
+            line-height: 1.2;
+        }
+
+        #result.json-mode .json-key {
+            color: #9cdcfe;
+        }
+
+        #result.json-mode .json-string {
+            color: #ce9178;
+        }
+
+        #result.json-mode .json-number {
+            color: #b5cea8;
         }
 
         .options {
@@ -141,21 +174,22 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: #333;
+            color: var(--text-primary);
         }
 
         select {
             width: 100%;
             padding: 0.75rem;
-            border-radius: 6px;
-            border: 2px solid #e0e0e0;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            background: white;
         }
 
         select:focus {
             outline: none;
-            border-color: #007bff;
+            border-color: var(--accent-color);
         }
 
         /* 日文振り仮名樣式 */
@@ -185,7 +219,7 @@
             align-items: center;
             gap: 10px;
             text-align: center;
-            color: #666;
+            color: var(--text-secondary);
             font-style: italic;
         }
 
@@ -194,8 +228,8 @@
             display: block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(0, 0, 0, 0.1);
-            border-top-color: #666;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-color);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -207,26 +241,27 @@
         }
 
         .error {
-            color: #dc3545;
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
+            color: #e74c3c;
+            background: #fadbd8;
+            border: 1px solid #f5b7b1;
             padding: 1rem;
-            border-radius: 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
         }
 
         .option-group.disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             pointer-events: none;
         }
 
         .option-group.disabled label {
-            color: #999;
+            color: #95a5a6;
         }
 
         .option-group.disabled select {
-            background-color: #f5f5f5;
-            color: #999;
-            border-color: #ddd;
+            background-color: #ecf0f1;
+            color: #95a5a6;
+            border-color: var(--border-color);
         }
 
         .result-container {
@@ -235,40 +270,44 @@
 
         .copy-btn {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            background: #28a745;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--accent-color);
             color: white;
             border: none;
-            border-radius: 4px;
-            padding: 0.4rem 0.8rem;
+            border-radius: 3px;
+            padding: 0.4rem 0.75rem;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: opacity 0.2s;
             width: auto;
             display: inline-block;
+            font-weight: 500;
         }
 
         .copy-btn:hover {
-            background: #218838;
-            transform: translateY(-1px);
+            opacity: 0.85;
         }
 
         .copy-btn:active {
-            transform: translateY(0);
+            opacity: 1;
         }
 
         .copy-btn.copied {
-            background: #17a2b8;
+            background: #27ae60;
         }
 
         @media (max-width: 600px) {
             .container {
-                padding: 1rem;
+                padding: 2rem 1rem;
             }
 
             .options {
                 grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.75rem;
             }
         }
     </style>
@@ -308,6 +347,7 @@
                 <label for="conversionMode">模式 (Mode):</label>
                 <select id="conversionMode" disabled>
                     <option value="furigana"><span class="japanese-text">ふりがな</span> (Furigana)</option>
+                    <option value="furigana_map"><span class="japanese-text">ふりがなマップ</span> (Furigana Map)</option>
                     <option value="normal"><span class="japanese-text">ノーマル</span> (Normal)</option>
                     <option value="spaced"><span class="japanese-text">スペース入り</span> (Spaced)</option>
                 </select>
@@ -318,7 +358,7 @@
                     <option value="false">否 (No)</option>
                     <option value="true">是 (Yes)</option>
                 </select>
-                <small style="color: #666; font-size: 0.85em; margin-top: 0.25rem;">
+                <small style="color: var(--text-secondary); font-size: 0.85em; margin-top: 0.25rem;">
                     僅在<span class="japanese-text">振り仮名</span>模式下有效 (Only effective in Furigana mode)
                 </small>
             </div>
@@ -385,7 +425,7 @@
 
             // Function to update includeKatakana availability
             function updateIncludeKatakanaAvailability() {
-                const isFuriganaMode = conversionMode.value === 'furigana';
+                const isFuriganaMode = conversionMode.value === 'furigana' || conversionMode.value === 'furigana_map';
                 if (isFuriganaMode) {
                     includeKatakanaGroup.classList.remove('disabled');
                 } else {
@@ -393,6 +433,16 @@
                     // Reset to default value when disabled
                     includeKatakana.value = 'false';
                 }
+            }
+
+            // Function to format JSON with syntax highlighting
+            function formatJSON(obj) {
+                let json = JSON.stringify(obj, null, 2);
+                // Add syntax highlighting
+                json = json.replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:');
+                json = json.replace(/: "([^"]*)"/g, ': <span class="json-string">"$1"</span>');
+                json = json.replace(/: (\d+)/g, ': <span class="json-number">$1</span>');
+                return json;
             }
 
             // Initialize Kuroshiro
@@ -441,20 +491,29 @@
                 };
 
                 // Only include includeKatakana option when in furigana mode
-                if (conversionMode.value === 'furigana') {
+                if (conversionMode.value === 'furigana' || conversionMode.value === 'furigana_map') {
                     options.includeKatakana = includeKatakana.value === 'true';
                 }
 
                 kuroshiro.convert(text, options)
                     .then(result => {
-                        // When using furigana mode, the result is HTML.
-                        // For other modes, it's plain text.
                         resultDiv.className = '';
-                        resultDiv.innerHTML = result;
-                        lastResult = result;
+                        
+                        // Check if result is an object (furigana_map mode)
+                        if (typeof result === 'object' && result !== null) {
+                            // Display JSON format for furigana_map
+                            resultDiv.classList.add('json-mode');
+                            resultDiv.innerHTML = formatJSON(result);
+                            lastResult = JSON.stringify(result, null, 2);
+                        } else {
+                            // When using furigana mode, the result is HTML.
+                            // For other modes, it's plain text.
+                            resultDiv.innerHTML = result;
+                            lastResult = result;
+                        }
 
                         // Show copy button if there's a result
-                        if (result.trim()) {
+                        if (result && (typeof result === 'string' ? result.trim() : true)) {
                             copyBtn.style.display = 'block';
                         }
                     })

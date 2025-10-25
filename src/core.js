@@ -79,7 +79,7 @@ class Kuroshiro {
             throw new Error("Invalid Target Syllabary.");
         }
 
-        if (["normal", "spaced", "okurigana", "furigana"].indexOf(options.mode) === -1) {
+        if (["normal", "spaced", "okurigana", "furigana", "furigana_map"].indexOf(options.mode) === -1) {
             throw new Error("Invalid Conversion Mode.");
         }
 
@@ -161,7 +161,7 @@ class Kuroshiro {
                     throw new Error("Unknown option.to param");
             }
         }
-        else if (options.mode === "okurigana" || options.mode === "furigana") {
+        else if (options.mode === "okurigana" || options.mode === "furigana" || options.mode === "furigana_map") {
             const notations = []; // [basic, basic_type[1=kanji,2=kana,3=others], notation, pronunciation]
             for (let i = 0; i < tokens.length; i++) {
                 const strType = getStrType(tokens[i].surface_form);
@@ -222,6 +222,56 @@ class Kuroshiro {
                         throw new Error("Unknown strType");
                 }
             }
+            // Special mode: return structured ruby span map { text, ruby: [{s,e,rt}] }
+            if (options.mode === "furigana_map") {
+                // Build the plain text and span indices first
+                let text = "";
+                const ruby = [];
+                let cursor = 0;
+                for (let n = 0; n < notations.length; n++) {
+                    const base = notations[n][0];
+                    const typ = notations[n][1]; // 1=kanji, 2=kana, 3=others
+                    const hira = notations[n][2];
+                    const pron = notations[n][3];
+
+                    const start = cursor;
+                    const end = start + base.length;
+
+                    // Decide whether this segment should carry ruby
+                    let shouldRuby = false;
+                    if (typ === 1) {
+                        // Kanji always get ruby
+                        shouldRuby = true;
+                    }
+                    else if (typ === 2) {
+                        // Kana only when includeKatakana and the original was katakana
+                        const isKatakanaLocal = base !== hira; // katakana differs from hiragana form
+                        shouldRuby = !!options.includeKatakana && isKatakanaLocal;
+                    }
+
+                    if (shouldRuby) {
+                        let rt;
+                        switch (options.to) {
+                            case "katakana":
+                                rt = toRawKatakana(hira);
+                                break;
+                            case "romaji":
+                                rt = toRawRomaji(pron, options.romajiSystem);
+                                break;
+                            case "hiragana":
+                            default:
+                                rt = hira;
+                                break;
+                        }
+                        ruby.push({ s: start, e: end, rt });
+                    }
+
+                    text += base;
+                    cursor = end;
+                }
+                return { text, ruby };
+            }
+
             let result = "";
             switch (options.to) {
                 case "katakana":
