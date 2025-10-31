@@ -12,6 +12,7 @@
       "spaced-comment": 1,
       "quotes": ["error", "double", { "allowTemplateLiterals": true }],
       "import/prefer-default-export": "off",
+      "import/extensions": ["error", "ignorePackages"],
       "consistent-return": 0,
       "no-useless-escape": 0,
       "no-underscore-dangle": 0,

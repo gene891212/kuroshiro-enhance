@@ -1,6 +1,6 @@
 {
   "name": "kuroshiro-enhance",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "kuroshiro is a Japanese language library for converting Japanese sentence to Hiragana, Katakana or Romaji with furigana and okurigana modes supported.",
   "main": "lib/index.js",
   "module": "src/index.js",
@@ -48,7 +48,8 @@
   },
   "homepage": "https://github.com/gene891212/kuroshiro",
   "dependencies": {
-    "@babel/runtime": "^7.14.0"
+    "@babel/runtime": "^7.14.0",
+    "kuromoji": "^0.1.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
@@ -57,6 +58,7 @@
     "@babel/preset-env": "^7.14.4",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^24.8.0",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "babelify": "^10.0.0",
     "browserify": "^17.0.0",
     "coveralls": "^3.1.0",

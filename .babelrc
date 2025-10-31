@@ -30,7 +30,8 @@
                         "helpers": false,
                         "regenerator": true
                     }
-                ]
+                ],
+                "add-module-exports"
             ]
         },
         "es": {

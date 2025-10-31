@@ -102,7 +102,7 @@ Install with npm package manager:
 ```sh
 $ npm install kuroshiro-enhance
 ```
-    
+
 Load the library:
 
 *Support ES6 Module `import`*
@@ -124,7 +124,7 @@ const result = await kuroshiro.convert("感じ取れたら手を繋ごう、重�
 *And CommonJS `require`*
 
 ```js
-const Kuroshiro = require("kuroshiro-enhance")；
+const Kuroshiro = require("kuroshiro-enhance");
 const KuromojiAnalyzer = require("kuroshiro-analyzer-kuromoji");
 const kuroshiro = new Kuroshiro();
 

@@ -11,6 +11,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.14.0
         version: 7.25.6
+      kuromoji:
+        specifier: ^0.1.2
+        version: 0.1.2
     devDependencies:
       '@babel/cli':
         specifier: ^7.14.3
@@ -30,6 +33,9 @@ importers:
       babel-jest:
         specifier: ^24.8.0
         version: 24.9.0(@babel/core@7.25.2)
+      babel-plugin-add-module-exports:
+        specifier: ^1.0.4
+        version: 1.0.4
       babelify:
         specifier: ^10.0.0
         version: 10.0.0(@babel/core@7.25.2)
@@ -985,6 +991,9 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0
 
+  babel-plugin-add-module-exports@1.0.4:
+    resolution: {integrity: sha512-g+8yxHUZ60RcyaUpfNzy56OtWW+x9cyEe9j+CranqLiqbju2yf/Cy6ZtYK40EZxtrdHllzlVZgLmcOUCTlJ7Jg==}
+
   babel-plugin-istanbul@5.2.0:
     resolution: {integrity: sha512-5LphC0USA8t4i1zCtjbbNb6jJj/9+X6P37Qfirc/70EQ34xKlMW+a1RHGwxGI+SwWpNwZ27HqvzAobeqaXwiZw==}
     engines: {node: '>=6'}
@@ -1736,7 +1745,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
+    deprecated: Upgrade to fsevents v2 to mitigate potential security issues
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -4883,6 +4892,8 @@ snapshots:
       slash: 2.0.0
     transitivePeerDependencies:
       - supports-color
+
+  babel-plugin-add-module-exports@1.0.4: {}
 
   babel-plugin-istanbul@5.2.0:
     dependencies:
