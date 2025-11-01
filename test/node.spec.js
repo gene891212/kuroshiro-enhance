@@ -3,8 +3,8 @@
  */
 
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
-import Kuroshiro from "../src";
-import { patchTokens } from "../src/util";
+import Kuroshiro from "../src/index.js";
+import { patchTokens } from "../src/util.js";
 
 describe("Kuroshiro Node Initialization Test", () => {
     let kuroshiro;
@@ -291,5 +291,103 @@ describe("Kuroshiro Node Funtional Test", () => {
         const ori = EXAMPLE_TEXT;
         const result = await kuroshiro.convert(ori, { mode: "furigana", to: "romaji" });
         expect(result).toEqual("<ruby>感<rp>(</rp><rt>kan</rt><rp>)</rp></ruby><ruby>じ<rp>(</rp><rt>ji</rt><rp>)</rp></ruby><ruby>取<rp>(</rp><rt>to</rt><rp>)</rp></ruby><ruby>れ<rp>(</rp><rt>re</rt><rp>)</rp></ruby><ruby>た<rp>(</rp><rt>ta</rt><rp>)</rp></ruby><ruby>ら<rp>(</rp><rt>ra</rt><rp>)</rp></ruby><ruby>手<rp>(</rp><rt>te</rt><rp>)</rp></ruby><ruby>を<rp>(</rp><rt>o</rt><rp>)</rp></ruby><ruby>繋<rp>(</rp><rt>tsuna</rt><rp>)</rp></ruby><ruby>ご<rp>(</rp><rt>go</rt><rp>)</rp></ruby><ruby>う<rp>(</rp><rt>u</rt><rp>)</rp></ruby>、<ruby>重<rp>(</rp><rt>kasa</rt><rp>)</rp></ruby><ruby>な<rp>(</rp><rt>na</rt><rp>)</rp></ruby><ruby>る<rp>(</rp><rt>ru</rt><rp>)</rp></ruby><ruby>の<rp>(</rp><rt>no</rt><rp>)</rp></ruby><ruby>は<rp>(</rp><rt>wa</rt><rp>)</rp></ruby><ruby>人生<rp>(</rp><rt>jinsei</rt><rp>)</rp></ruby><ruby>の<rp>(</rp><rt>no</rt><rp>)</rp></ruby><ruby>ラ<rp>(</rp><rt>ra</rt><rp>)</rp></ruby><ruby>イ<rp>(</rp><rt>i</rt><rp>)</rp></ruby><ruby>ン<rp>(</rp><rt>n</rt><rp>)</rp></ruby> and <ruby>レ<rp>(</rp><rt>re</rt><rp>)</rp></ruby><ruby>ミ<rp>(</rp><rt>mi</rt><rp>)</rp></ruby><ruby>リ<rp>(</rp><rt>ri</rt><rp>)</rp></ruby><ruby>ア<rp>(</rp><rt>a</rt><rp>)</rp></ruby><ruby>最高<rp>(</rp><rt>saikō</rt><rp>)</rp></ruby>！");
+    });
+    it("Kanji to Hiragana with furigana_map(1)", async () => {
+        const ori = EXAMPLE_TEXT;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_map", to: "hiragana" });
+        expect(result).toEqual({
+            text: "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
+            ruby: [
+                { s: 0, e: 1, rt: "かん" },
+                { s: 2, e: 3, rt: "と" },
+                { s: 6, e: 7, rt: "て" },
+                { s: 8, e: 9, rt: "つな" },
+                { s: 12, e: 13, rt: "かさ" },
+                { s: 17, e: 19, rt: "じんせい" },
+                { s: 32, e: 34, rt: "さいこう" }
+            ]
+        });
+    });
+    it("Kanji to Hiragana with furigana_map(2)", async () => {
+        const ori = EXAMPLE_TEXT2;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_map", to: "hiragana" });
+        expect(result).toEqual(
+            {
+                text: "ブラウン管への愛が足りねぇな",
+                ruby: [
+                    { s: 4, e: 5, rt: "かん" },
+                    { s: 7, e: 8, rt: "あい" },
+                    { s: 9, e: 10, rt: "た" }
+                ]
+            }
+        );
+    });
+    it("Kanji to Hiragana with furigana_map(3)", async () => {
+        const ori = EXAMPLE_TEXT3;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_map", to: "hiragana" });
+        expect(result).toEqual(
+            {
+                text: "関ヶ原の戦い",
+                ruby: [{ s: 0, e: 3, rt: "せきがはら" }, { s: 4, e: 5, rt: "たたか" }]
+            }
+        );
+    });
+    it("Kanji to Katakana with furigana_map", async () => {
+        const ori = EXAMPLE_TEXT;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_map", to: "katakana" });
+        expect(result).toEqual(
+            {
+                text: "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
+                ruby: [
+                    { s: 0, e: 1, rt: "カン" },
+                    { s: 2, e: 3, rt: "ト" },
+                    { s: 6, e: 7, rt: "テ" },
+                    { s: 8, e: 9, rt: "ツナ" },
+                    { s: 12, e: 13, rt: "カサ" },
+                    { s: 17, e: 19, rt: "ジンセイ" },
+                    { s: 32, e: 34, rt: "サイコウ" }
+                ]
+            }
+        );
+    });
+    it("Kanji to Romaji with furigana_map", async () => {
+        const ori = EXAMPLE_TEXT;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_map", to: "romaji" });
+        expect(result).toEqual(
+            {
+                text: "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
+                ruby: [
+                    { s: 0, e: 1, rt: "kan" },
+                    { s: 2, e: 3, rt: "to" },
+                    { s: 6, e: 7, rt: "te" },
+                    { s: 8, e: 9, rt: "tsuna" },
+                    { s: 12, e: 13, rt: "kasa" },
+                    { s: 17, e: 19, rt: "jinsei" },
+                    { s: 32, e: 34, rt: "saikō" }
+                ]
+            }
+        );
+    });
+    it("Kanji to Hiragana with furigana_map - includeKatakana(false)", async () => {
+        const ori = "古びたテディベア";
+        const result = await kuroshiro.convert(ori, { mode: "furigana_map", to: "hiragana", includeKatakana: false });
+        expect(result).toEqual(
+            { text: "古びたテディベア", ruby: [{ s: 0, e: 1, rt: "ふる" }] }
+        );
+    });
+    it("Kanji to Hiragana with furigana_map - includeKatakana(true)", async () => {
+        const ori = "古びたテディベア";
+        const result = await kuroshiro.convert(ori, { mode: "furigana_map", to: "hiragana", includeKatakana: true });
+        expect(result).toEqual({
+            text: "古びたテディベア",
+            ruby: [
+                { s: 0, e: 1, rt: "ふる" },
+                { s: 3, e: 4, rt: "て" },
+                { s: 4, e: 5, rt: "で" },
+                { s: 5, e: 6, rt: "ぃ" },
+                { s: 6, e: 7, rt: "べ" },
+                { s: 7, e: 8, rt: "あ" }
+            ]
+        });
     });
 });

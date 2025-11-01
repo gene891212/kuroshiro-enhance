@@ -43,17 +43,20 @@ The new `furigana_map` mode returns a structured JSON object instead of HTML, ma
 
 __Input text:__ 
 
-胸に閉じ込めた
+古びたテディベア
 
-__With `mode: "furigana_map"`:__
+__With `mode: "furigana_map"` and `includeKatakana: true`:__
 
 ```json
 {
-  "text": "胸に閉じ込めた",
+  "text": "古びたテディベア",
   "ruby": [
-    { "s": 0, "e": 1, "rt": "むね" },
-    { "s": 2, "e": 4, "rt": "とじこ" },
-    { "s": 5, "e": 6, "rt": "こ" }
+    { "s": 0, "e": 1, "rt": "ふる" },
+    { "s": 3, "e": 4, "rt": "て" },
+    { "s": 4, "e": 5, "rt": "で" },
+    { "s": 5, "e": 6, "rt": "ぃ" },
+    { "s": 6, "e": 7, "rt": "べ" },
+    { "s": 7, "e": 8, "rt": "あ" }
   ]
 }
 ```
@@ -101,6 +104,16 @@ You can check the demo [here](https://gene891212.github.io/kuroshiro-enhance).
 Install with npm package manager:
 ```sh
 $ npm install kuroshiro-enhance
+```
+
+Or with pnpm:
+```sh
+$ pnpm add kuroshiro-enhance
+```
+
+Or with yarn:
+```sh
+$ yarn add kuroshiro-enhance
 ```
 
 Load the library:
@@ -233,15 +246,17 @@ await kuroshiro.convert("感じ取れたら手を繋ごう、重なるのは人�
 
 ```js
 // furigana_map (New!)
-await kuroshiro.convert("感じ取れたら手を繋ごう", {mode:"furigana_map", to:"hiragana"});
+await kuroshiro.convert("古びたテディベア", {mode:"furigana_map", to:"hiragana", includeKatakana: true});
 // result: 
 {
-  "text": "感じ取れたら手を繋ごう",
+  "text": "古びたテディベア",
   "ruby": [
-    { "s": 0, "e": 1, "rt": "かん" },
-    { "s": 2, "e": 3, "rt": "と" },
-    { "s": 6, "e": 7, "rt": "て" },
-    { "s": 9, "e": 10, "rt": "つな" }
+    { "s": 0, "e": 1, "rt": "ふる" },
+    { "s": 3, "e": 4, "rt": "て" },
+    { "s": 4, "e": 5, "rt": "で" },
+    { "s": 5, "e": 6, "rt": "ぃ" },
+    { "s": 6, "e": 7, "rt": "べ" },
+    { "s": 7, "e": 8, "rt": "あ" }
   ]
 }
 ```
