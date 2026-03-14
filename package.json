@@ -1,21 +1,29 @@
 {
   "name": "kuroshiro-enhance",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "description": "kuroshiro is a Japanese language library for converting Japanese sentence to Hiragana, Katakana or Romaji with furigana and okurigana modes supported.",
-  "main": "lib/index.js",
-  "module": "src/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "dev": "tsup --watch",
+    "build": "cross-env NODE_ENV=production tsup && node -e \"const fs=require('fs'); fs.renameSync('dist/index.global.js', 'dist/kuroshiro.min.js'); fs.renameSync('dist/index.global.js.map', 'dist/kuroshiro.min.js.map');\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint src test",
-    "lint:fix": "eslint --fix src test --ext .js",
-    "jest": "jest --verbose",
-    "jest:watch": "npm run jest -- --watch",
-    "jest:coverage": "jest --verbose --coverage",
-    "test": "npm run lint && npm run jest",
-    "clean": "rimraf lib dist",
-    "build": "npm run build:cjs && npm run build:umd && npm run build:umd:min",
-    "build:cjs": "cross-env BABEL_ENV=cjs babel src --out-dir lib",
-    "build:umd": "cross-env BABEL_ENV=umd NODE_ENV=development browserify src/index.js -s Kuroshiro -o dist/kuroshiro.js -t [ babelify ]",
-    "build:umd:min": "cross-env BABEL_ENV=umd NODE_ENV=production browserify src/index.js -s Kuroshiro -g uglifyify -o dist/kuroshiro.min.js -t [ babelify ]"
+    "clean": "rimraf lib dist coverage"
   },
   "repository": {
     "type": "git",
@@ -52,42 +60,23 @@
     "kuromoji": "^0.1.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.14.3",
-    "@babel/core": "^7.14.3",
-    "@babel/plugin-transform-runtime": "^7.14.3",
-    "@babel/preset-env": "^7.14.4",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^24.8.0",
-    "babel-plugin-add-module-exports": "^1.0.4",
-    "babelify": "^10.0.0",
-    "browserify": "^17.0.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^18.0.0",
+    "@vitest/coverage-v8": "^1.2.2",
     "coveralls": "^3.1.0",
-    "cross-env": "^5.2.1",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.23.4",
-    "husky": "^2.4.0",
-    "jest": "^24.8.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.56.0",
+    "husky": "^8.0.3",
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
-    "lint-staged": "^8.2.0",
-    "uglifyify": "^5.0.2"
+    "lint-staged": "^15.2.0",
+    "rimraf": "^5.0.5",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.57.0",
+    "vitest": "^1.2.2"
   },
   "engines": {
-    "node": ">=6.5.0"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "babelify"
-      ]
-    ]
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    },
-    "testRegex": "(/test/.*|(\\.|/)(test|spec))\\.jsx?$",
-    "testURL": "http://localhost"
+    "node": ">=18.0.0"
   },
   "husky": {
     "hooks": {
@@ -95,7 +84,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.js": "eslint",
-    "test/**/*.js": "eslint"
+    "src/**/*.{js,ts}": "eslint",
+    "test/**/*.{js,ts}": "eslint"
   }
 }

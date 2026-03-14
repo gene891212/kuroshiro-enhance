@@ -12,7 +12,7 @@ const ROMANIZATION_SYSTEM = {
  * @param {string} ch Given char
  * @return {boolean} if given char is a hiragana
  */
-const isHiragana = function (ch) {
+const isHiragana = function (ch: string) {
     ch = ch[0];
     return ch >= "\u3040" && ch <= "\u309f";
 };
@@ -23,7 +23,7 @@ const isHiragana = function (ch) {
  * @param {string} ch Given char
  * @return {boolean} if given char is a katakana
  */
-const isKatakana = function (ch) {
+const isKatakana = function (ch: string) {
     ch = ch[0];
     return ch >= "\u30a0" && ch <= "\u30ff";
 };
@@ -34,7 +34,7 @@ const isKatakana = function (ch) {
  * @param {string} ch Given char
  * @return {boolean} if given char is a kana
  */
-const isKana = function (ch) {
+const isKana = function (ch: string) {
     return isHiragana(ch) || isKatakana(ch);
 };
 
@@ -44,7 +44,7 @@ const isKana = function (ch) {
  * @param {string} ch Given char
  * @return {boolean} if given char is a kanji
  */
-const isKanji = function (ch) {
+const isKanji = function (ch: string) {
     ch = ch[0];
     return (ch >= "\u4e00" && ch <= "\u9fcf")
         || (ch >= "\uf900" && ch <= "\ufaff")
@@ -57,7 +57,7 @@ const isKanji = function (ch) {
  * @param {string} ch Given char
  * @return {boolean} if given char is a Japanese
  */
-const isJapanese = function (ch) {
+const isJapanese = function (ch: string) {
     return isKana(ch) || isKanji(ch);
 };
 
@@ -67,7 +67,7 @@ const isJapanese = function (ch) {
  * @param {string} str Given string
  * @return {boolean} if given string has hiragana
  */
-const hasHiragana = function (str) {
+const hasHiragana = function (str: string) {
     for (let i = 0; i < str.length; i++) {
         if (isHiragana(str[i])) return true;
     }
@@ -80,7 +80,7 @@ const hasHiragana = function (str) {
  * @param {string} str Given string
  * @return {boolean} if given string has katakana
  */
-const hasKatakana = function (str) {
+const hasKatakana = function (str: string) {
     for (let i = 0; i < str.length; i++) {
         if (isKatakana(str[i])) return true;
     }
@@ -93,7 +93,7 @@ const hasKatakana = function (str) {
  * @param {string} str Given string
  * @return {boolean} if given string has kana
  */
-const hasKana = function (str) {
+const hasKana = function (str: string) {
     for (let i = 0; i < str.length; i++) {
         if (isKana(str[i])) return true;
     }
@@ -106,7 +106,7 @@ const hasKana = function (str) {
  * @param {string} str Given string
  * @return {boolean} if given string has kanji
  */
-const hasKanji = function (str) {
+const hasKanji = function (str: string) {
     for (let i = 0; i < str.length; i++) {
         if (isKanji(str[i])) return true;
     }
@@ -119,7 +119,7 @@ const hasKanji = function (str) {
  * @param {string} str Given string
  * @return {boolean} if given string has Japanese
  */
-const hasJapanese = function (str) {
+const hasJapanese = function (str: string) {
     for (let i = 0; i < str.length; i++) {
         if (isJapanese(str[i])) return true;
     }
@@ -132,7 +132,7 @@ const hasJapanese = function (str) {
  * @param {string} str Given string
  * @return {string} Hiragana string
  */
-const toRawHiragana = function (str) {
+const toRawHiragana = function (str: string) {
     return [...str].map((ch) => {
         if (ch > "\u30a0" && ch < "\u30f7") {
             return String.fromCharCode(ch.charCodeAt(0) + KATAKANA_HIRAGANA_SHIFT);
@@ -147,7 +147,7 @@ const toRawHiragana = function (str) {
  * @param {string} str Given string
  * @return {string} Katakana string
  */
-const toRawKatakana = function (str) {
+const toRawKatakana = function (str: string) {
     return [...str].map((ch) => {
         if (ch > "\u3040" && ch < "\u3097") {
             return String.fromCharCode(ch.charCodeAt(0) + HIRAGANA_KATAKANA_SHIFT);
@@ -163,10 +163,10 @@ const toRawKatakana = function (str) {
  * @param {string} system To which romanization system the given string is converted
  * @return {string} Romaji string
  */
-const toRawRomaji = function (str, system) {
+const toRawRomaji = function (str: string, system?: string) {
     system = system || ROMANIZATION_SYSTEM.HEPBURN;
 
-    const romajiSystem = {
+    const romajiSystem: Record<string, Record<string, string>> = {
         nippon: {
             // 数字と記号
             "１": "1",
@@ -1451,7 +1451,7 @@ const toRawRomaji = function (str, system) {
  * @param {string} str Given string
  * @return {number} Type number. 0 for pure kanji, 1 for kanji-kana-mixed, 2 for pure kana, 3 for others
  */
-const getStrType = function (str) {
+const getStrType = function (str: string) {
     let hasKJ = false;
     let hasHK = false;
     for (let i = 0; i < str.length; i++) {
@@ -1473,7 +1473,7 @@ const getStrType = function (str) {
  * @param {Object} tokens Given tokens
  * @return {Object} Patched tokens
  */
-const patchTokens = function (tokens) {
+const patchTokens = function (tokens: any[]) {
     // patch for token structure
     for (let cr = 0; cr < tokens.length; cr++) {
         if (hasJapanese(tokens[cr].surface_form)) {
@@ -1539,7 +1539,7 @@ const patchTokens = function (tokens) {
  * @param {string} str Given string
  * @return {string} Hiragana string
  */
-const kanaToHiragna = function (str) {
+const kanaToHiragna = function (str: string) {
     return toRawHiragana(str);
 };
 
@@ -1549,7 +1549,7 @@ const kanaToHiragna = function (str) {
  * @param {string} str Given string
  * @return {string} Katakana string
  */
-const kanaToKatakana = function (str) {
+const kanaToKatakana = function (str: string) {
     return toRawKatakana(str);
 };
 
@@ -1560,7 +1560,7 @@ const kanaToKatakana = function (str) {
  * @param {string} system To which romanization system the given string is converted. ["nippon"|"passport"|"hepburn"]
  * @return {string} Romaji string
  */
-const kanaToRomaji = function (str, system) {
+const kanaToRomaji = function (str: string, system?: string) {
     return toRawRomaji(str, system);
 };
 

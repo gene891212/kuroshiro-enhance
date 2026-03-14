@@ -2,13 +2,14 @@
  * @jest-environment jsdom
  */
 
+import { describe, it, expect, beforeAll } from "vitest";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
-import Kuroshiro from "../src/index.js";
+import Kuroshiro from "../src/index";
 
 describe("Kuroshiro Browser Test", () => {
     const EXAMPLE_TEXT = "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！";
 
-    let kuroshiro;
+    let kuroshiro: any;
 
     beforeAll(async () => {
         kuroshiro = new Kuroshiro();

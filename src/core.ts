@@ -24,6 +24,9 @@ import {
  * Kuroshiro Class
  */
 class Kuroshiro {
+    static Util: any;
+    private _analyzer: any = null;
+
     /**
      * Constructor
      * @constructs Kuroshiro
@@ -38,7 +41,7 @@ class Kuroshiro {
      * @instance
      * @returns {Promise} Promise object represents the result of initialization
      */
-    async init(analyzer) {
+    async init(analyzer: any): Promise<void> {
         if (!analyzer || typeof analyzer !== "object" || typeof analyzer.init !== "function" || typeof analyzer.parse !== "function") {
             throw new Error("Invalid initialization parameter.");
         }
@@ -65,7 +68,7 @@ class Kuroshiro {
      * @param {string} [options.delimiter_end=")"] Delimiter(End)
      * @returns {Promise} Promise object represents the result of conversion
      */
-    async convert(str, options) {
+    async convert(str: string, options?: any): Promise<any> {
         options = options || {};
         options.to = options.to || "hiragana";
         options.mode = options.mode || "normal";
@@ -83,7 +86,7 @@ class Kuroshiro {
             throw new Error("Invalid Conversion Mode.");
         }
 
-        const ROMAJI_SYSTEMS = Object.keys(ROMANIZATION_SYSTEM).map(e => ROMANIZATION_SYSTEM[e]);
+        const ROMAJI_SYSTEMS = Object.keys(ROMANIZATION_SYSTEM).map(e => ROMANIZATION_SYSTEM[e as keyof typeof ROMANIZATION_SYSTEM]);
         if (ROMAJI_SYSTEMS.indexOf(options.romajiSystem) === -1) {
             throw new Error("Invalid Romanization System.");
         }
@@ -99,7 +102,7 @@ class Kuroshiro {
                     }
                     return tokens.map(token => token.reading).join(" ");
                 case "romaji":
-                    const romajiConv = (token) => {
+                    const romajiConv = (token: any) => {
                         let preToken;
                         if (hasJapanese(token.surface_form)) {
                             preToken = token.pronunciation || token.reading;
