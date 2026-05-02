@@ -3,180 +3,126 @@
 # kuroshiro-enhance
 
 [![npm version](https://img.shields.io/npm/v/kuroshiro-enhance.svg)](https://www.npmjs.com/package/kuroshiro-enhance)
-[![License](https://img.shields.io/github/license/lassjs/lass.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/gene891212/kuroshiro-enhance.svg)](LICENSE)
 
-kuroshiro is a Japanese language library for converting Japanese sentence to Hiragana, Katakana or Romaji with furigana and okurigana modes supported.
+kuroshiro-enhance is a fork of the original kuroshiro for converting Japanese text to Hiragana, Katakana, or Romaji. It supports furigana, okurigana, multiple analyzers, and structured ruby output for custom rendering.
 
-kuroshiro-enhance is a fork of the original kuroshiro, a Japanese language library for converting Japanese sentences to Hiragana, Katakana, or Romaji with furigana and okurigana modes supported.
+Demo: [gene891212.github.io/kuroshiro-enhance](https://gene891212.github.io/kuroshiro-enhance)
 
-## What's New in kuroshiro-enhance?
+## Highlights
 
-In this enhanced version, we've added powerful new features to the `convert(str, [options])` API, providing more control and flexibility when working with Japanese text conversion.
-
-### New Features Overview:
-
-- **includeKatakana**: A boolean option that lets you control the inclusion of Katakana in Furigana mode. (Default: false)
-- **furigana_map mode**: A new conversion mode that returns a structured object with text and ruby annotation positions, perfect for programmatic processing and custom rendering.
-
-#### Example Usage:
-
-**Input text:**
-
-古びたテディベア
-
-**With `includeKatakana: false` (Default):**
-
-<ruby>古<rp>(</rp><rt>ふる</rt><rp>)</rp></ruby>びたテディベア
-
-**With `includeKatakana: true`:**
-
-<ruby>古<rp>(</rp><rt>ふる</rt><rp>)</rp></ruby>びた<ruby>テ<rp>(</rp><rt>て</rt><rp>)</rp></ruby><ruby>デ<rp>(</rp><rt>で</rt><rp>)</rp></ruby><ruby>ィ<rp>(</rp><rt>ぃ</rt><rp>)</rp></ruby><ruby>ベ<rp>(</rp><rt>べ</rt><rp>)</rp></ruby><ruby>ア<rp>(</rp><rt>あ</rt><rp>)</rp></ruby>
-
-As you can see, when `includeKatakana` is set to `true`, katakana characters like "テディベア" also get furigana annotations, showing their hiragana readings. When set to `false` (default), katakana characters are left as-is without furigana.
-
-### New Mode: furigana_map
-
-The new `furigana_map` mode returns a structured JSON object instead of HTML, making it easier to process and render ruby annotations programmatically.
-
-**Input text:**
-
-古びたテディベア
-
-**With `mode: "furigana_map"` and `includeKatakana: true`:**
-
-```json
-{
-  "text": "古びたテディベア",
-  "ruby": [
-    { "s": 0, "e": 1, "rt": "ふる" },
-    { "s": 3, "e": 4, "rt": "て" },
-    { "s": 4, "e": 5, "rt": "で" },
-    { "s": 5, "e": 6, "rt": "ぃ" },
-    { "s": 6, "e": 7, "rt": "べ" },
-    { "s": 7, "e": 8, "rt": "あ" }
-  ]
-}
-```
-
-- `text`: The original text
-- `ruby`: An array of ruby annotations
-  - `s`: Start position (inclusive)
-  - `e`: End position (exclusive)
-  - `rt`: Ruby text (reading)
-
-This format is particularly useful when you need to:
-
-- Build custom rendering logic
-- Integrate with frontend frameworks (React, Vue, etc.)
-- Process ruby annotations programmatically
-- Store furigana data in a structured format
+Compared with the original kuroshiro, this fork focuses on structured output, Katakana ruby handling, bundled types, and a modern build setup.
 
 
+| Feature | kuroshiro (original) | kuroshiro-enhance |
+| ------- | -------------------- | ----------------- |
+| Basic conversion (Hiragana / Katakana / Romaji) | ✓ | ✓ |
+| Furigana and okurigana modes | ✓ | ✓ |
+| Katakana ruby annotations | - | ✓ (`includeKatakana`) |
+| Structured ruby output | - | ✓ (`furigana_map`) |
+| TypeScript support | Limited | Bundled type definitions |
+| Build and test toolchain | Older toolchain | `tsup` + `vitest`, Node.js >= 18 |
 
-## Demo
+## Table of Contents
 
-You can check the demo [here](https://gene891212.github.io/kuroshiro-enhance).
+- [Highlights](#highlights)
+- [Quick Start](#quick-start)
+- [Usage](#usage)
+- [Analyzer Plugins](#analyzer-plugins)
+- [API](#api)
+- [Breaking Changes](#breaking-changes)
+- [Contributing](#contributing)
+- [Credits](#credits)
+- [License](#license)
 
-## Feature
-
-- Japanese Sentence => Hiragana, Katakana or Romaji
-- Furigana and okurigana supported
-- 🆕Multiple morphological analyzers supported
-- 🆕Multiple romanization systems supported
-- Useful Japanese utils
-- 🆕 TypeScript support with built-in type definitions
-
-## Breaking Change in 2.x
-
-- **Node.js Environment Requirement**: Upgraded toolchain to `tsup` and `vitest`. Kuroshiro now explicitly requires `Node.js >= 18.0.0` to function properly.
-- **CommonJS Require Syntax**: Since the codebase now strictly transpiles ES Modules and outputs CommonJS via `.cjs` exports, you must append `.default` when importing via standard CommonJS in Node: `const Kuroshiro = require("kuroshiro-enhance").default;`
-- **TypeScript Strictness**: Type definitions are now natively bundled (`index.d.ts`), so TypeScript users will now see compiler errors if passing incorrect parameter types to initialization or conversion methods.
-
-## Breaking Change in 1.x
-
-- Seperate morphological analyzer from phonetic notation logic to make it possible that we can use different morphological analyzers ([ready-made](#ready-made-analyzer-plugins) or [customized](CONTRIBUTING.md#how-to-submit-new-analyzer-plugins))
-- Embrace ES8/ES2017 to use async/await functions
-- Use ES6 Module instead of CommonJS
-
-## Ready-made Analyzer Plugins
-
-_You should check the environment compatibility of each analyzer before you start working with them_
-
-| Analyzer      | Node.js Support | Browser Support | Plugin Repo                                                                                  | Developer                             |
-| ------------- | --------------- | --------------- | -------------------------------------------------------------------------------------------- | ------------------------------------- |
-| Kuromoji      | ✓               | ✓               | [kuroshiro-analyzer-kuromoji](https://github.com/hexenq/kuroshiro-analyzer-kuromoji)         | [Hexen Qi](https://github.com/hexenq) |
-| Mecab         | ✓               | ✗               | [kuroshiro-analyzer-mecab](https://github.com/hexenq/kuroshiro-analyzer-mecab)               | [Hexen Qi](https://github.com/hexenq) |
-| Yahoo Web API | ✓               | ✗               | [kuroshiro-analyzer-yahoo-webapi](https://github.com/hexenq/kuroshiro-analyzer-yahoo-webapi) | [Hexen Qi](https://github.com/hexenq) |
-
-## Usage
-
-### Node.js (or using a module bundler (e.g. Webpack))
+## Quick Start
 
 > **Prerequisite:** Node.js >= 18 is required.
 
-Install with npm package manager:
+Install the library and an analyzer plugin:
 
 ```sh
-$ npm install kuroshiro-enhance
+npm install kuroshiro-enhance kuroshiro-analyzer-kuromoji
+# or
+pnpm add kuroshiro-enhance kuroshiro-analyzer-kuromoji
+# or
+yarn add kuroshiro-enhance kuroshiro-analyzer-kuromoji
 ```
 
-Or with pnpm:
+Recommended default analyzer: `kuroshiro-analyzer-kuromoji`.
 
-```sh
-$ pnpm add kuroshiro-enhance
-```
-
-Or with yarn:
-
-```sh
-$ yarn add kuroshiro-enhance
-```
-
-Load the library:
-
-_Support ES6 Module `import`_
+Convert Japanese text with the Kuromoji analyzer. `furigana` mode returns an HTML string; render it as HTML in your UI if you want browser ruby display.
 
 ```js
 import Kuroshiro from "kuroshiro-enhance";
-// Initialize kuroshiro with an instance of analyzer (You could check the [apidoc](#initanalyzer) for more information):
-// For this example, you should npm install and import the kuromoji analyzer first
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
-// Instantiate
+
 const kuroshiro = new Kuroshiro();
-// Initialize
-// Here uses async/await, you could also use Promise
 await kuroshiro.init(new KuromojiAnalyzer());
-// Convert what you want
-const result = await kuroshiro.convert(
-  "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
-  { to: "hiragana" },
-);
+
+const result = await kuroshiro.convert("感じ取れたら手を繋ごう", {
+  to: "hiragana",
+  mode: "furigana",
+  includeKatakana: true,
+});
+
+console.log(result);
+// <ruby>感<rp>(</rp><rt>かん</rt><rp>)</rp></ruby>じ<ruby>取<rp>(</rp><rt>と</rt><rp>)</rp></ruby>れたら<ruby>手<rp>(</rp><rt>て</rt><rp>)</rp></ruby>を<ruby>繋<rp>(</rp><rt>つな</rt><rp>)</rp></ruby>ごう
 ```
 
+Use `mode: "furigana_map"` when you need structured ruby spans instead of HTML:
+
+```js
+const result = await kuroshiro.convert("古びたテディベア", {
+  to: "hiragana",
+  mode: "furigana_map",
+  includeKatakana: true,
+});
+
+console.log(result);
+// {
+//   text: "古びたテディベア",
+//   ruby: [
+//     { s: 0, e: 1, rt: "ふる" },
+//     { s: 3, e: 4, rt: "て" },
+//     ...
+//   ]
+// }
+```
+
+## Usage
 
 ### Browser
 
-Add `dist/kuroshiro.min.js` to your frontend project (you may first build it from source with `npm run build` after `npm install`), and in your HTML:
+`kuroshiro.min.js` does not include analyzer plugins or dictionary files. In the browser, load both kuroshiro and an analyzer bundle, then pass the analyzer a `dictPath`.
+
+Using CDN bundles:
 
 ```html
-<script src="url/to/kuroshiro.min.js"></script>
+<script src="https://unpkg.com/kuroshiro-enhance@latest/dist/kuroshiro.min.js"></script>
+<script src="https://unpkg.com/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
 ```
 
-For this example, you should also include `kuroshiro-analyzer-kuromoji.min.js` which you could get from [kuroshiro-analyzer-kuromoji](https://github.com/hexenq/kuroshiro-analyzer-kuromoji)
+Using a local build:
+
+```sh
+npm install
+npm run build
+```
+
+Then load the generated bundle and an analyzer bundle in your HTML:
 
 ```html
+<script src="dist/kuroshiro.min.js"></script>
 <script src="url/to/kuroshiro-analyzer-kuromoji.min.js"></script>
 ```
 
-Instantiate:
+Initialize kuroshiro with an analyzer instance:
 
 ```js
-var kuroshiro = new Kuroshiro();
-```
+const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
+const kuroshiro = new KuroshiroClass();
 
-Initialize kuroshiro with an instance of analyzer, then convert what you want:
-
-```js
 kuroshiro
   .init(new KuromojiAnalyzer({ dictPath: "url/to/dictFiles" }))
   .then(function () {
@@ -190,6 +136,35 @@ kuroshiro
   });
 ```
 
+### Node.js CommonJS
+
+```js
+const Kuroshiro = require("kuroshiro-enhance").default;
+const KuromojiAnalyzer = require("kuroshiro-analyzer-kuromoji");
+
+(async () => {
+  const kuroshiro = new Kuroshiro();
+  await kuroshiro.init(new KuromojiAnalyzer());
+
+  const result = await kuroshiro.convert(
+    "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
+    { to: "hiragana" },
+  );
+
+  console.log(result);
+})();
+```
+
+## Analyzer Plugins
+
+_You should check the environment compatibility of each analyzer before you start working with them._
+
+| Analyzer      | Node.js Support | Browser Support | Plugin Repo                                                                                  | Developer                             |
+| ------------- | --------------- | --------------- | -------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Kuromoji      | ✓               | ✓               | [kuroshiro-analyzer-kuromoji](https://github.com/hexenq/kuroshiro-analyzer-kuromoji)         | [Hexen Qi](https://github.com/hexenq) |
+| Mecab         | ✓               | ✗               | [kuroshiro-analyzer-mecab](https://github.com/hexenq/kuroshiro-analyzer-mecab)               | [Hexen Qi](https://github.com/hexenq) |
+| Yahoo Web API | ✓               | ✗               | [kuroshiro-analyzer-yahoo-webapi](https://github.com/hexenq/kuroshiro-analyzer-yahoo-webapi) | [Hexen Qi](https://github.com/hexenq) |
+
 ## API
 
 ### Constructor
@@ -200,11 +175,11 @@ kuroshiro
 const kuroshiro = new Kuroshiro();
 ```
 
-### Instance Medthods
+### Instance Methods
 
 #### init(analyzer)
 
-Initialize kuroshiro with an instance of analyzer. You should first import an analyzer and initialize it. You can make use of the [Ready-made Analyzers](#ready-made-analyzer-plugins) listed above. And please refer to documentation of analyzers for analyzer initialization instructions
+Initialize kuroshiro with an analyzer instance. You can use one of the [Analyzer Plugins](#analyzer-plugins) listed above, or provide a custom analyzer that implements the same interface.
 
 **Arguments**
 
@@ -225,14 +200,14 @@ Convert given string to target syllabary with options available
 - `str` - A String to be converted.
 - `options` - _Optional_ kuroshiro has several convert options as below.
 
-| Options                   | Type    | Default    | Description                                                                               |
-| ------------------------- | ------- | ---------- | ----------------------------------------------------------------------------------------- |
-| to                        | String  | "hiragana" | Target syllabary [`hiragana`, `katakana`, `romaji`]                                       |
-| mode                      | String  | "normal"   | Convert mode [`normal`, `spaced`, `okurigana`, `furigana`, `furigana_map`] **(Updated!)** |
-| includeKatakana           | boolean | false      | Whether to include Katakana in Furigana/Furigana Map mode **(New!)**                      |
-| romajiSystem<sup>\*</sup> | String  | "hepburn"  | Romanization system [`nippon`, `passport`, `hepburn`]                                     |
-| delimiter_start           | String  | "("        | Delimiter(Start)                                                                          |
-| delimiter_end             | String  | ")"        | Delimiter(End)                                                                            |
+| Options                   | Type    | Default    | Description                                                                                           |
+| ------------------------- | ------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| to                        | String  | "hiragana" | Target syllabary [`hiragana`, `katakana`, `romaji`]                                                   |
+| mode                      | String  | "normal"   | Convert mode [`normal`, `spaced`, `okurigana`, `furigana`, `furigana_map`]                            |
+| includeKatakana           | boolean | false      | In `furigana` and `furigana_map` modes, also add ruby annotations to Katakana characters when `true`. |
+| romajiSystem<sup>\*</sup> | String  | "hepburn"  | Romanization system [`nippon`, `passport`, `hepburn`]                                                 |
+| delimiter_start           | String  | "("        | Delimiter(Start)                                                                                      |
+| delimiter_end             | String  | ")"        | Delimiter(End)                                                                                        |
 
 \*_: Param `romajiSystem` is only applied when the value of param `to` is `romaji`. For more about it, check [Romanization System](#romanization-system)_
 
@@ -242,7 +217,7 @@ Convert given string to target syllabary with options available
 // normal
 await kuroshiro.convert(
   "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
-  { mode: "okurigana", to: "hiragana" },
+  { to: "hiragana" },
 );
 // result：かんじとれたらてをつなごう、かさなるのはじんせいのライン and レミリアさいこう！
 ```
@@ -251,7 +226,7 @@ await kuroshiro.convert(
 // spaced
 await kuroshiro.convert(
   "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
-  { mode: "okurigana", to: "hiragana" },
+  { to: "hiragana", mode: "spaced" },
 );
 // result：かんじとれ たら て を つなご う 、 かさなる の は じんせい の ライン   and   レミ リア さいこう ！
 ```
@@ -260,7 +235,7 @@ await kuroshiro.convert(
 // okurigana
 await kuroshiro.convert(
   "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
-  { mode: "okurigana", to: "hiragana" },
+  { to: "hiragana", mode: "okurigana" },
 );
 // result: 感(かん)じ取(と)れたら手(て)を繋(つな)ごう、重(かさ)なるのは人生(じんせい)のライン and レミリア最高(さいこう)！
 ```
@@ -269,14 +244,18 @@ await kuroshiro.convert(
 // furigana
 await kuroshiro.convert(
   "感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！",
-  { mode: "furigana", to: "hiragana" },
+  { to: "hiragana", mode: "furigana" },
 );
 // result: <ruby>感<rp>(</rp><rt>かん</rt><rp>)</rp></ruby>じ<ruby>取<rp>(</rp><rt>と</rt><rp>)</rp></ruby>れたら<ruby>手<rp>(</rp><rt>て</rt><rp>)</rp></ruby>を<ruby>繋<rp>(</rp><rt>つな</rt><rp>)</rp></ruby>ごう、<ruby>重<rp>(</rp><rt>かさ</rt><rp>)</rp></ruby>なるのは<ruby>人生<rp>(</rp><rt>じんせい</rt><rp>)</rp></ruby>のライン and レミリア<ruby>最高<rp>(</rp><rt>さいこう</rt><rp>)</rp></ruby>！
 ```
 
 ```js
 // furigana_map (New!)
-await kuroshiro.convert("古びたテディベア", {mode:"furigana_map", to:"hiragana", includeKatakana: true});
+await kuroshiro.convert("古びたテディベア", {
+  to: "hiragana",
+  mode: "furigana_map",
+  includeKatakana: true,
+});
 // result:
 {
   "text": "古びたテディベア",
@@ -291,12 +270,20 @@ await kuroshiro.convert("古びたテディベア", {mode:"furigana_map", to:"hi
 }
 ```
 
+In `furigana_map` results:
+
+- `text`: The original text.
+- `ruby`: Ruby annotation spans for `text`.
+- `s`: Start character index.
+- `e`: End character index, exclusive.
+- `rt`: Ruby text, or reading.
+
 ### Utils
 
 **Examples**
 
 ```js
-const result = Kuroshiro.Util.isHiragana("あ"));
+const result = Kuroshiro.Util.isHiragana("あ");
 ```
 
 #### isHiragana(char)
@@ -355,17 +342,17 @@ Convert input kana string to romaji. Param `system` accepts `"nippon"`, `"passpo
 
 kuroshiro supports three kinds of romanization systems.
 
-`nippon`: Nippon-shiki romanization. Refer to [ISO 3602 Strict](http://www.age.ne.jp/x/nrs/iso3602/iso3602.html).
+`nippon`: Nippon-shiki romanization. See [ISO 3602 Strict](http://www.age.ne.jp/x/nrs/iso3602/iso3602.html) for the reference table.
 
-`passport`: Passport-shiki romanization. Refer to [Japanese romanization table](https://www.ezairyu.mofa.go.jp/passport/hebon.html) published by Ministry of Foreign Affairs of Japan.
+`passport`: Passport-shiki romanization. See the [Japanese romanization table](https://www.ezairyu.mofa.go.jp/passport/hebon.html) published by the Ministry of Foreign Affairs of Japan.
 
-`hepburn`: Hepburn romanization. Refer to [BS 4812 : 1972](https://archive.is/PiJ4).
+`hepburn`: Hepburn romanization. See [BS 4812 : 1972](https://archive.is/PiJ4) for the reference standard.
 
 There is a useful [webpage](http://jgrammar.life.coocan.jp/ja/data/rohmaji2.htm) for you to check the difference between these romanization systems.
 
 ### Notice for Romaji Conversion
 
-Since it's impossible to fully automatically convert **furigana** directly to **romaji** because furigana lacks information on pronunciation (Refer to [なぜ フリガナでは ダメなのか？](https://green.adam.ne.jp/roomazi/onamae.html#naze)).
+It is impossible to fully automatically convert **furigana** directly to **romaji** because furigana lacks some pronunciation information. The article [なぜ フリガナでは ダメなのか？](https://green.adam.ne.jp/roomazi/onamae.html#naze) explains the ambiguity.
 
 kuroshiro will not handle chōon when processing directly furigana (kana) -> romaji conversion with every romanization system (Except that Chōonpu will be handled)
 
@@ -374,15 +361,31 @@ using `nippon`, `passport`, `hepburn` romanization system._
 
 The kanji -> romaji conversion with/without furigana mode is **unaffected** by this logic.
 
+## Breaking Changes
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
+
+### v2.x
+
+- **Node.js Environment Requirement**: Kuroshiro now requires Node.js >= 18.0.0.
+- **CommonJS Require Syntax**: Since the codebase outputs CommonJS through `.cjs` exports, standard CommonJS imports should use `.default`: `const Kuroshiro = require("kuroshiro-enhance").default;`
+- **TypeScript Strictness**: Type definitions are now bundled, so TypeScript users may see compiler errors for invalid options or parameters.
+
+### v1.x
+
+- Separated morphological analyzer logic from phonetic notation logic, allowing different analyzers from [Analyzer Plugins](#analyzer-plugins) or custom analyzers.
+- Embraced ES8/ES2017 and async/await.
+- Switched to ES Modules instead of CommonJS.
+
 ## Contributing
 
 Please check [CONTRIBUTING](CONTRIBUTING.md).
 
-## Inspired By
+## Credits
 
-- kuromoji
-- wanakana
+- [kuromoji](https://github.com/takuyaa/kuromoji.js)
+- [wanakana](https://github.com/WaniKani/WanaKana)
 
 ## License
 
-MIT
+[MIT License](LICENSE)

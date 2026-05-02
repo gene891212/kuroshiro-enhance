@@ -1,3 +1,81 @@
+<a name="2.0.0"></a>
+## [2.0.0](https://github.com/gene891212/kuroshiro-enhance/compare/v1.4.1...v2.0.0) (2026-03-14)
+
+### BREAKING CHANGE
+
+* Require Node.js >= 18.0.0
+* Modernize the build output around ESM/CommonJS exports; CommonJS consumers should use `require("kuroshiro-enhance").default`
+
+### Feature
+
+* Migrate the codebase to TypeScript and bundle type definitions
+* Replace the legacy build and test toolchain with `tsup` and `vitest`
+
+### Documents
+
+* Update README examples and document `furigana_map`
+
+### Test
+
+* Add tests for `furigana_map`
+
+### CI
+
+* Update publish workflow checks for pnpm
+
+<a name="1.4.1"></a>
+## [1.4.1](https://github.com/gene891212/kuroshiro-enhance/compare/v1.4.0...v1.4.1) (2025-11-01)
+
+### Bug Fixes
+
+* Support both CommonJS and ES Module imports without requiring `.default`
+
+<a name="1.4.0"></a>
+## [1.4.0](https://github.com/gene891212/kuroshiro-enhance/compare/v1.3.3...v1.4.0) (2025-10-25)
+
+### Feature
+
+* Add `furigana_map` mode for structured ruby span output
+* Improve the GitHub Pages demo UI
+
+### Bug Fixes
+
+* Render non-Japanese characters correctly in ruby output
+* Update furigana romaji output to use individual ruby tags
+
+### Demo
+
+* Improve loading, result display, copy button, Japanese font support, and clipboard behavior
+
+<a name="1.3.3"></a>
+## [1.3.3](https://github.com/gene891212/kuroshiro-enhance/compare/v1.3.2...v1.3.3) (2025-07-15)
+
+### CI
+
+* Update publish workflow to use pnpm for dependency management and publishing
+
+<a name="1.3.2"></a>
+## [1.3.2](https://github.com/gene891212/kuroshiro-enhance/compare/v1.3.1...v1.3.2) (2025-07-15)
+
+### Documents
+
+* Update README examples for `includeKatakana`
+
+### Demo
+
+* Add GitHub Pages demo
+
+### CI
+
+* Add npm auto-publish workflow
+
+<a name="1.3.1"></a>
+## [1.3.1](https://github.com/gene891212/kuroshiro-enhance/releases/tag/v1.3.1) (2024-09-01)
+
+### Miscellaneous
+
+* Rename package and repository metadata for `kuroshiro-enhance`
+
 <a name="1.2.0"></a>
 ## [1.2.0](https://github.com/hexenq/kuroshiro/compare/1.1.2...1.2.0) (2021-6-7)
 
