@@ -1,5 +1,3 @@
-![kuroshiro](https://kuroshiro.org/kuroshiro.png)
-
 # kuroshiro-enhance
 
 [![npm version](https://img.shields.io/npm/v/kuroshiro-enhance.svg)](https://www.npmjs.com/package/kuroshiro-enhance)
@@ -9,10 +7,11 @@ kuroshiro-enhance is a fork of the original kuroshiro for converting Japanese te
 
 Demo: [gene891212.github.io/kuroshiro-enhance](https://gene891212.github.io/kuroshiro-enhance)
 
+![kuroshiro-enhance demo showing furigana output with Katakana ruby annotations](docs/demo.png)
+
 ## Highlights
 
-Compared with the original kuroshiro, this fork focuses on structured output, Katakana ruby handling, bundled types, and a modern build setup.
-
+Compared with the original kuroshiro, this fork adds structured ruby output and optional Katakana ruby annotations for custom furigana rendering.
 
 | Feature | kuroshiro (original) | kuroshiro-enhance |
 | ------- | -------------------- | ----------------- |
@@ -20,8 +19,6 @@ Compared with the original kuroshiro, this fork focuses on structured output, Ka
 | Furigana and okurigana modes | ✓ | ✓ |
 | Katakana ruby annotations | - | ✓ (`includeKatakana`) |
 | Structured ruby output | - | ✓ (`furigana_map`) |
-| TypeScript support | Limited | Bundled type definitions |
-| Build and test toolchain | Older toolchain | `tsup` + `vitest`, Node.js >= 18 |
 
 ## Table of Contents
 
@@ -37,7 +34,7 @@ Compared with the original kuroshiro, this fork focuses on structured output, Ka
 
 ## Quick Start
 
-> **Prerequisite:** Node.js >= 18 is required.
+> **Prerequisite:** Node.js >= 18 is required for Node.js usage and local development.
 
 Install the library and an analyzer plugin:
 
@@ -250,7 +247,7 @@ await kuroshiro.convert(
 ```
 
 ```js
-// furigana_map (New!)
+// furigana_map
 await kuroshiro.convert("古びたテディベア", {
   to: "hiragana",
   mode: "furigana_map",
@@ -383,8 +380,9 @@ Please check [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Credits
 
-- [kuromoji](https://github.com/takuyaa/kuromoji.js)
-- [wanakana](https://github.com/WaniKani/WanaKana)
+- [kuroshiro](https://github.com/hexenq/kuroshiro) by [Hexen Qi](https://github.com/hexenq), the original project this fork is based on.
+- kuromoji
+- wanakana
 
 ## License
 

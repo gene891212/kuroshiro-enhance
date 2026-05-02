@@ -12,7 +12,6 @@
 <body>
     <main class="page">
         <header class="hero">
-            <div class="eyebrow">Japanese text conversion library</div>
             <h1>kuroshiro-enhance</h1>
             <p class="lede">
                 Convert Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana,
@@ -27,7 +26,7 @@
             <div class="section-header">
                 <div>
                     <h2 id="playground-title">Playground</h2>
-                    <p>Try one conversion mode directly with your own input.</p>
+                    <p>Try a conversion mode with your own input.</p>
                 </div>
             </div>
 
@@ -84,7 +83,7 @@
             <div class="section-header">
                 <div>
                     <h2 id="comparison-title">Mode comparison</h2>
-                    <p>See how each mode shapes the same sample text.</p>
+                    <p>Compare each mode using the same sample text.</p>
                 </div>
             </div>
             <p class="comparison-sample">Sample: <span class="japanese-text">最後のステージから over and over</span></p>
@@ -101,7 +100,7 @@
 
             <section id="install" class="doc-section" aria-labelledby="install-title">
                 <h3 id="install-title">Install</h3>
-                <p>Install the core package and a morphological analyzer.</p>
+                <p>Install the package and an analyzer plugin.</p>
                 <pre class="code-block"><code>npm install kuroshiro-enhance kuroshiro-analyzer-kuromoji</code></pre>
             </section>
 
@@ -181,7 +180,7 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
             </section>
 
             <section class="doc-section" aria-labelledby="features-title">
-                <h3 id="features-title">Enhanced features</h3>
+                <h3 id="features-title">Structured ruby output</h3>
                 <p><code>includeKatakana</code> is useful when Katakana loanwords or names should also receive ruby. <code>furigana_map</code> returns structured spans for custom rendering instead of browser ruby HTML.</p>
                 <pre class="code-block"><code>{
   "text": "漢字とカタカナ",
