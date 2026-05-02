@@ -1,544 +1,538 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuroshiro-enhance Demo</title>
-    <link rel="icon" type="image/svg+xml" href="/kuroshiro-enhance/favicon.svg">
-    <style>
-        /* 定義字體變數 */
-        :root {
-            --font-chinese: 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --font-japanese: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans CJK JP', 'Yu Gothic', 'Meiryo', sans-serif;
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --border-color: #e1e8ed;
-            --bg-light: #f8f9fa;
-            --text-primary: #1a1a1a;
-            --text-secondary: #4a5568;
-        }
-
-        /* 繁體中文字體 - 用於介面文字 */
-        body {
-            font-family: var(--font-chinese);
-            container-type: inline-size;
-            container-name: page;
-            padding: 0;
-            background: #f5f7fa;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        /* 日文字體類別 - 用於日文內容 */
-        .japanese-text {
-            font-family: var(--font-japanese);
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-            background: white;
-            min-height: 100vh;
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 400;
-        }
-
-        .github-link {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .github-link a {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 400;
-            font-size: 0.9rem;
-            transition: opacity 0.2s;
-        }
-
-        .github-link a:hover {
-            opacity: 0.7;
-        }
-
-        /* 日文輸入和顯示區域 */
-        textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 1rem;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            font-family: var(--font-japanese);
-            transition: border-color 0.2s;
-            box-sizing: border-box;
-            resize: vertical;
-            background: white;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        button {
-            display: block;
-            width: 100%;
-            padding: 0.875rem;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        button:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        button:hover:not(:disabled) {
-            opacity: 0.9;
-        }
-
-        /* 日文結果顯示區域 */
-        #result {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            padding-top: 3rem;
-            border: 1px solid var(--border-color);
-            background: var(--bg-light);
-            border-radius: 4px;
-            min-height: 100px;
-            white-space: pre-wrap;
-            font-size: 1.1rem;
-            line-height: 2;
-            font-family: var(--font-japanese);
-            margin-bottom: 1rem;
-        }
-
-        #result.json-mode {
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.85rem;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            overflow-x: auto;
-            line-height: 1.2;
-        }
-
-        #result.json-mode .json-key {
-            color: #9cdcfe;
-        }
-
-        #result.json-mode .json-string {
-            color: #ce9178;
-        }
-
-        #result.json-mode .json-number {
-            color: #b5cea8;
-        }
-
-        .options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .option-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        select {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
-            background: white;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        /* 日文振り仮名樣式 */
-        ruby,
-        rt,
-        ruby>rb {
-            font-family: var(--font-japanese);
-        }
-
-        ruby {
-            line-height: 2.5;
-        }
-
-        rt {
-            font-size: 0.6em;
-            font-weight: normal;
-            line-height: 0.5em;
-        }
-
-        ruby>rb {
-            font-size: 1em;
-        }
-
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-style: italic;
-        }
-
-        .loading::before {
-            content: '';
-            display: block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--accent-color);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .error {
-            color: #e74c3c;
-            background: #fadbd8;
-            border: 1px solid #f5b7b1;
-            padding: 1rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        .option-group.disabled {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-
-        .option-group.disabled label {
-            color: #95a5a6;
-        }
-
-        .option-group.disabled select {
-            background-color: #ecf0f1;
-            color: #95a5a6;
-            border-color: var(--border-color);
-        }
-
-        .result-container {
-            position: relative;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 3px;
-            padding: 0.4rem 0.75rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            width: auto;
-            display: inline-block;
-            font-weight: 500;
-        }
-
-        .copy-btn:hover {
-            opacity: 0.85;
-        }
-
-        .copy-btn:active {
-            opacity: 1;
-        }
-
-        .copy-btn.copied {
-            background: #27ae60;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 2rem 1rem;
-            }
-
-            .options {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 1.75rem;
-            }
-        }
-    </style>
+    <title>kuroshiro-enhance Demo</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <main class="page">
+        <header class="hero">
+            <div class="eyebrow">Japanese text conversion library</div>
+            <h1>kuroshiro-enhance</h1>
+            <p class="lede">
+                Convert Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana,
+                Katakana ruby annotations, and structured ruby output for custom renderers.
+            </p>
+            <div class="actions" aria-label="Project link">
+                <a class="action-link" href="https://github.com/gene891212/kuroshiro-enhance" target="_blank" rel="noreferrer">View on GitHub</a>
+            </div>
+        </header>
 
-    <div class="container">
-        <h1>🎌 Kuroshiro-enhance Demo</h1>
-        <p class="subtitle">A powerful Japanese text conversion library</p>
+        <section class="section" aria-labelledby="playground-title">
+            <div class="section-header">
+                <div>
+                    <h2 id="playground-title">Playground</h2>
+                    <p>Try one conversion mode directly with your own input.</p>
+                </div>
+            </div>
 
-        <div class="github-link">
-            <a href="https://github.com/gene891212/kuroshiro" target="_blank">
-                📖 View on GitHub
-            </a>
-        </div>
-
-        <div>
-            <label for="inputText">輸入日文文本 (Enter Japanese Text):</label>
-            <textarea id="inputText" rows="4" placeholder="ここに日本語の文章を入力してください。" class="japanese-text" disabled>
-壁の写真 錆びたフレーム
+            <div class="playground">
+                <div class="form-grid">
+                    <div class="field full">
+                        <label for="inputText">Japanese text</label>
+                        <textarea id="inputText" rows="4" placeholder="ここに日本語の文章を入力してください。" class="japanese-text" disabled>壁の写真 錆びたフレーム
 空の花瓶 あの日のままで
 捨てられない 古びたテディベア
 擦り切れたネイビーのコート</textarea>
-        </div>
+                    </div>
 
-        <div class="options">
-            <div class="option-group">
-                <label for="targetSyllabary">轉換目標 (To):</label>
-                <select id="targetSyllabary" disabled>
-                    <option value="hiragana"><span class="japanese-text">ひらがな</span> (Hiragana)</option>
-                    <option value="katakana"><span class="japanese-text">カタカナ</span> (Katakana)</option>
-                    <option value="romaji">Romaji</option>
-                </select>
+                    <div class="field">
+                        <label for="targetSyllabary">To</label>
+                        <select id="targetSyllabary" disabled>
+                            <option value="hiragana">Hiragana</option>
+                            <option value="katakana">Katakana</option>
+                            <option value="romaji">Romaji</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="conversionMode">Mode</label>
+                        <select id="conversionMode" disabled>
+                            <option value="furigana">furigana</option>
+                            <option value="furigana_map">furigana_map</option>
+                            <option value="okurigana">okurigana</option>
+                            <option value="normal">normal</option>
+                            <option value="spaced">spaced</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="includeKatakana">Include Katakana ruby</label>
+                        <select id="includeKatakana" disabled>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                        </select>
+                        <span class="hint">Applied to <code>furigana</code> and <code>furigana_map</code> only.</span>
+                    </div>
+                </div>
+
+                <button id="convertBtn" class="convert-btn" disabled>Initializing...</button>
+
+                <div class="result-container">
+                    <button id="copyBtn" class="copy-btn" style="display: none;">Copy result</button>
+                    <div id="result" class="result-box loading">Loading dictionary...</div>
+                </div>
             </div>
-            <div class="option-group">
-                <label for="conversionMode">模式 (Mode):</label>
-                <select id="conversionMode" disabled>
-                    <option value="furigana"><span class="japanese-text">ふりがな</span> (Furigana)</option>
-                    <option value="furigana_map"><span class="japanese-text">ふりがなマップ</span> (Furigana Map)</option>
-                    <option value="normal"><span class="japanese-text">ノーマル</span> (Normal)</option>
-                    <option value="spaced"><span class="japanese-text">スペース入り</span> (Spaced)</option>
-                </select>
+        </section>
+
+        <section class="section" aria-labelledby="comparison-title">
+            <div class="section-header">
+                <div>
+                    <h2 id="comparison-title">Mode comparison</h2>
+                    <p>See how each mode shapes the same sample text.</p>
+                </div>
             </div>
-            <div class="option-group" id="includeKatakanaGroup">
-                <label for="includeKatakana">包含片假名 (Include Katakana):</label>
-                <select id="includeKatakana" disabled>
-                    <option value="false">否 (No)</option>
-                    <option value="true">是 (Yes)</option>
-                </select>
-                <small style="color: var(--text-secondary); font-size: 0.85em; margin-top: 0.25rem;">
-                    僅在<span class="japanese-text">振り仮名</span>模式下有效 (Only effective in Furigana mode)
-                </small>
+            <p class="comparison-sample">Sample: <span class="japanese-text">最後のステージから over and over</span></p>
+            <div id="comparisonGrid" class="comparison-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="section docs-layout" aria-labelledby="docs-title">
+            <div class="section-header">
+                <div>
+                    <h2 id="docs-title">Quick docs</h2>
+                    <p>Install the package, initialize an analyzer, then call <code>convert()</code> with the output options shown above.</p>
+                </div>
             </div>
-        </div>
 
-        <button id="convertBtn" disabled>初始化中... (Initializing...)</button>
+            <section id="install" class="doc-section" aria-labelledby="install-title">
+                <h3 id="install-title">Install</h3>
+                <p>Install the core package and a morphological analyzer.</p>
+                <pre class="code-block"><code>npm install kuroshiro-enhance kuroshiro-analyzer-kuromoji</code></pre>
+            </section>
 
-        <div class="result-container">
-            <button id="copyBtn" class="copy-btn" style="display: none;">📋 複製 Ruby</button>
-            <div id="result" class="loading">載入中... (Loading...)</div>
-        </div>
-    </div>
+            <section class="doc-section" aria-labelledby="browser-title">
+                <h3 id="browser-title">Browser usage</h3>
+                <p>The browser bundle does not include analyzer plugins or dictionary files. Load both bundles and pass a dictionary path.</p>
+                <pre class="code-block"><code>&lt;script src="https://unpkg.com/kuroshiro-enhance@latest/dist/kuroshiro.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
+  const kuroshiro = new KuroshiroClass();
 
-    <!-- Load Kuroshiro-enhance and Kuromoji Analyzer -->
+  await kuroshiro.init(new KuromojiAnalyzer({ dictPath: "/kuroshiro-enhance/dict/" }));
+  const result = await kuroshiro.convert("漢字とカタカナ", {
+    to: "hiragana",
+    mode: "furigana",
+    includeKatakana: true
+  });
+&lt;/script&gt;</code></pre>
+            </section>
+
+            <section class="doc-section" aria-labelledby="node-title">
+                <h3 id="node-title">Node.js usage</h3>
+                <pre class="code-block"><code>import Kuroshiro from "kuroshiro-enhance";
+import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
+
+const kuroshiro = new Kuroshiro();
+await kuroshiro.init(new KuromojiAnalyzer());
+
+const result = await kuroshiro.convert("漢字とカタカナ", {
+  to: "hiragana",
+  mode: "furigana_map",
+  includeKatakana: true
+});</code></pre>
+            </section>
+
+            <section id="api" class="doc-section" aria-labelledby="api-title">
+                <h3 id="api-title">API options</h3>
+                <div class="api-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Default</th>
+                                <th>Values</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>to</code></td>
+                                <td><code>"hiragana"</code></td>
+                                <td><code>"hiragana"</code>, <code>"katakana"</code>, <code>"romaji"</code></td>
+                                <td>Target syllabary or romanization output.</td>
+                            </tr>
+                            <tr>
+                                <td><code>mode</code></td>
+                                <td><code>"normal"</code></td>
+                                <td><code>"normal"</code>, <code>"spaced"</code>, <code>"okurigana"</code>, <code>"furigana"</code>, <code>"furigana_map"</code></td>
+                                <td>Controls whether the result is plain text, annotated text, ruby HTML, or structured ruby spans.</td>
+                            </tr>
+                            <tr>
+                                <td><code>includeKatakana</code></td>
+                                <td><code>false</code></td>
+                                <td><code>true</code>, <code>false</code></td>
+                                <td>Adds ruby annotations to Katakana segments in <code>furigana</code> and <code>furigana_map</code> modes.</td>
+                            </tr>
+                            <tr>
+                                <td><code>romajiSystem</code></td>
+                                <td><code>"hepburn"</code></td>
+                                <td><code>"hepburn"</code>, <code>"nippon"</code>, <code>"passport"</code></td>
+                                <td>Romanization system used when <code>to</code> is <code>"romaji"</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="doc-section" aria-labelledby="features-title">
+                <h3 id="features-title">Enhanced features</h3>
+                <p><code>includeKatakana</code> is useful when Katakana loanwords or names should also receive ruby. <code>furigana_map</code> returns structured spans for custom rendering instead of browser ruby HTML.</p>
+                <pre class="code-block"><code>{
+  "text": "漢字とカタカナ",
+  "ruby": [
+    { "s": 0, "e": 2, "rt": "かんじ" },
+    { "s": 3, "e": 7, "rt": "かたかな" }
+  ]
+}</code></pre>
+            </section>
+
+            <section class="doc-section" aria-labelledby="analyzer-title">
+                <h3 id="analyzer-title">Browser dictionary files</h3>
+                <p>Browser usage needs Kuromoji dictionary files in addition to the script bundles. For this GitHub Pages demo, those files live in <code>docs/dict/</code> and are served from <code>/kuroshiro-enhance/dict/</code>.</p>
+                <ul class="inline-list">
+                    <li><code>kuroshiro.min.js</code></li>
+                    <li><code>kuroshiro-analyzer-kuromoji.min.js</code></li>
+                    <li><code>dict/*.dat.gz</code></li>
+                </ul>
+            </section>
+        </section>
+    </main>
+
     <script src="https://unpkg.com/kuroshiro-enhance@latest/dist/kuroshiro.min.js"></script>
-    <!-- <script src="./kuroshiro.min.js"></script> -->
     <script src="https://unpkg.com/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 處理 UMD 模組的預設導出
+            const comparisonText = '最後のステージから over and over';
+            const comparisonModes = ['normal', 'spaced', 'okurigana', 'furigana', 'furigana_map'];
+            const modeLabels = {
+                normal: 'Plain conversion without token spaces.',
+                spaced: 'Plain conversion with spaces between tokens.',
+                okurigana: 'Original text with readings in delimiters.',
+                furigana: 'Ruby HTML for browser rendering.',
+                furigana_map: 'Structured ruby spans for custom renderers.'
+            };
+
             const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
             const kuroshiro = new KuroshiroClass();
+
             const convertBtn = document.getElementById('convertBtn');
             const inputText = document.getElementById('inputText');
             const resultDiv = document.getElementById('result');
             const targetSyllabary = document.getElementById('targetSyllabary');
             const conversionMode = document.getElementById('conversionMode');
             const includeKatakana = document.getElementById('includeKatakana');
-            const includeKatakanaGroup = document.getElementById('includeKatakanaGroup');
             const copyBtn = document.getElementById('copyBtn');
+            const comparisonGrid = document.getElementById('comparisonGrid');
 
             let lastResult = '';
+            let isReady = false;
+            let debounceTimer = null;
+            let conversionRunId = 0;
+            let comparisonRunId = 0;
 
-            // Function to copy ruby text to clipboard
-            function copyRubyToClipboard() {
+            function updateCopyButtonLabel() {
+                copyBtn.textContent = 'Copy result';
+                copyBtn.classList.remove('copied');
+            }
+
+            function copyResultToClipboard() {
                 if (!lastResult) return;
 
-                navigator.clipboard.writeText(lastResult).then(() => {
-                    copyBtn.textContent = '✅ 已複製!';
+                const markCopied = () => {
+                    copyBtn.textContent = 'Copied';
                     copyBtn.classList.add('copied');
-                    setTimeout(() => {
-                        copyBtn.textContent = '📋 複製 Ruby';
-                        copyBtn.classList.remove('copied');
-                    }, 2000);
-                }).catch(err => {
-                    console.error('複製失敗:', err);
-                    // Fallback for older browsers
+                    setTimeout(updateCopyButtonLabel, 2000);
+                };
+
+                const fallbackCopy = () => {
                     const textArea = document.createElement('textarea');
                     textArea.value = lastResult;
                     document.body.appendChild(textArea);
                     textArea.select();
                     document.execCommand('copy');
                     document.body.removeChild(textArea);
+                    markCopied();
+                };
 
-                    copyBtn.textContent = '✅ 已複製!';
-                    copyBtn.classList.add('copied');
-                    setTimeout(() => {
-                        copyBtn.textContent = '📋 複製 Ruby';
-                        copyBtn.classList.remove('copied');
-                    }, 2000);
-                });
-            }
-
-            // Function to update includeKatakana availability
-            function updateIncludeKatakanaAvailability() {
-                const isFuriganaMode = conversionMode.value === 'furigana' || conversionMode.value === 'furigana_map';
-                if (isFuriganaMode) {
-                    includeKatakanaGroup.classList.remove('disabled');
-                } else {
-                    includeKatakanaGroup.classList.add('disabled');
-                    // Reset to default value when disabled
-                    includeKatakana.value = 'false';
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(lastResult)
+                        .then(markCopied)
+                        .catch(err => {
+                            console.error('Copy failed:', err);
+                            fallbackCopy();
+                        });
+                    return;
                 }
+
+                fallbackCopy();
             }
 
-            // Function to format JSON with syntax highlighting
-            function formatJSON(obj) {
-                let json = JSON.stringify(obj, null, 2);
-                // Add syntax highlighting
-                json = json.replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:');
-                json = json.replace(/: "([^"]*)"/g, ': <span class="json-string">"$1"</span>');
-                json = json.replace(/: (\d+)/g, ': <span class="json-number">$1</span>');
-                return json;
-            }
+            function renderSafeFurigana(container, html) {
+                const template = document.createElement('template');
+                template.innerHTML = html;
+                const allowedTags = new Set(['RUBY', 'RP', 'RT', 'RB']);
 
-            // Initialize Kuroshiro
-            const base = window.location.pathname.replace(/\/$/, '');
-            kuroshiro.init(new KuromojiAnalyzer({ dictPath: base + '/dict/' }))
-                .then(() => {
-                    convertBtn.disabled = false;
-                    convertBtn.textContent = '轉換 (Convert)';
+                function sanitizeNode(node) {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        return document.createTextNode(node.textContent);
+                    }
 
-                    // Enable form elements
-                    inputText.disabled = false;
-                    targetSyllabary.disabled = false;
-                    conversionMode.disabled = false;
-                    includeKatakana.disabled = false;
+                    if (node.nodeType !== Node.ELEMENT_NODE) {
+                        return document.createTextNode('');
+                    }
 
-                    console.log('Kuroshiro has been initialized.');
-                    // Initialize UI state
-                    updateIncludeKatakanaAvailability();
-                    // Perform an initial conversion
-                    performConversion();
-                })
-                .catch(err => {
-                    resultDiv.className = 'error';
-                    resultDiv.textContent = '初始化失敗 (Initialization Failed): ' + err.message;
-                    console.error(err);
+                    if (!allowedTags.has(node.tagName)) {
+                        const fragment = document.createDocumentFragment();
+                        node.childNodes.forEach(child => {
+                            fragment.appendChild(sanitizeNode(child));
+                        });
+                        return fragment;
+                    }
+
+                    const clean = document.createElement(node.tagName.toLowerCase());
+                    node.childNodes.forEach(child => {
+                        clean.appendChild(sanitizeNode(child));
+                    });
+                    return clean;
+                }
+
+                container.replaceChildren();
+                template.content.childNodes.forEach(node => {
+                    container.appendChild(sanitizeNode(node));
                 });
+            }
 
-            function performConversion() {
+            function getDictionaryPath() {
+                const pageUrl = new URL(window.location.href);
+                let basePath = pageUrl.pathname;
+
+                if (!basePath.endsWith('/')) {
+                    const lastPathSegment = basePath.slice(basePath.lastIndexOf('/') + 1);
+                    basePath = lastPathSegment.includes('.')
+                        ? basePath.slice(0, basePath.lastIndexOf('/') + 1)
+                        : `${basePath}/`;
+                }
+
+                return `${basePath}dict/`;
+            }
+
+            function buildOptions(mode) {
+                const options = {
+                    to: targetSyllabary.value,
+                    mode,
+                    romajiSystem: 'hepburn'
+                };
+
+                if (mode === 'furigana' || mode === 'furigana_map') {
+                    options.includeKatakana = includeKatakana.value === 'true';
+                }
+
+                return options;
+            }
+
+            function buildComparisonOptions(mode) {
+                const options = {
+                    to: targetSyllabary.value,
+                    mode,
+                };
+
+                if (mode === 'furigana' || mode === 'furigana_map') {
+                    options.includeKatakana = true;
+                }
+
+                return options;
+            }
+
+            function resetResultClasses(container) {
+                container.classList.remove('json-mode', 'error', 'loading');
+            }
+
+            function renderResult(container, mode, result) {
+                resetResultClasses(container);
+
+                if (typeof result === 'object' && result !== null) {
+                    container.classList.add('json-mode');
+                    container.textContent = JSON.stringify(result, null, 2);
+                    return;
+                }
+
+                if (mode === 'furigana') {
+                    renderSafeFurigana(container, result);
+                    return;
+                }
+
+                container.textContent = result;
+            }
+
+            function renderError(container, error) {
+                resetResultClasses(container);
+                container.classList.add('error');
+                container.textContent = error && error.message ? error.message : String(error);
+            }
+
+            async function performConversion() {
+                const runId = ++conversionRunId;
                 const text = inputText.value;
-                if (!text) {
-                    resultDiv.innerHTML = '';
-                    resultDiv.className = '';
+
+                if (!text.trim()) {
+                    resultDiv.textContent = '';
+                    resetResultClasses(resultDiv);
                     copyBtn.style.display = 'none';
                     lastResult = '';
                     return;
                 }
 
-                resultDiv.className = 'loading';
-                resultDiv.textContent = '轉換中... (Converting...)';
+                resultDiv.className = 'result-box loading';
+                resultDiv.textContent = 'Converting...';
                 copyBtn.style.display = 'none';
+                updateCopyButtonLabel();
 
-                const options = {
-                    to: targetSyllabary.value,
-                    mode: conversionMode.value,
-                    romajiSystem: 'hepburn', // Or 'nippon', 'passport'
-                };
+                const mode = conversionMode.value;
+                const options = buildOptions(mode);
 
-                // Only include includeKatakana option when in furigana mode
-                if (conversionMode.value === 'furigana' || conversionMode.value === 'furigana_map') {
-                    options.includeKatakana = includeKatakana.value === 'true';
+                try {
+                    const result = await kuroshiro.convert(text, options);
+                    if (runId !== conversionRunId) return;
+
+                    resultDiv.className = 'result-box';
+                    renderResult(resultDiv, mode, result);
+                    lastResult = typeof result === 'object' && result !== null
+                        ? JSON.stringify(result, null, 2)
+                        : result;
+
+                    if (lastResult && String(lastResult).trim()) {
+                        copyBtn.style.display = 'inline-flex';
+                    }
+                } catch (err) {
+                    if (runId !== conversionRunId) return;
+                    resultDiv.className = 'result-box';
+                    renderError(resultDiv, err);
+                    copyBtn.style.display = 'none';
+                    lastResult = '';
+                    console.error(err);
                 }
-
-                kuroshiro.convert(text, options)
-                    .then(result => {
-                        resultDiv.className = '';
-                        
-                        // Check if result is an object (furigana_map mode)
-                        if (typeof result === 'object' && result !== null) {
-                            // Display JSON format for furigana_map
-                            resultDiv.classList.add('json-mode');
-                            resultDiv.innerHTML = formatJSON(result);
-                            lastResult = JSON.stringify(result, null, 2);
-                        } else {
-                            // When using furigana mode, the result is HTML.
-                            // For other modes, it's plain text.
-                            resultDiv.innerHTML = result;
-                            lastResult = result;
-                        }
-
-                        // Show copy button if there's a result
-                        if (result && (typeof result === 'string' ? result.trim() : true)) {
-                            copyBtn.style.display = 'block';
-                        }
-                    })
-                    .catch(err => {
-                        resultDiv.className = 'error';
-                        resultDiv.textContent = 'Error: ' + err.message;
-                        copyBtn.style.display = 'none';
-                        lastResult = '';
-                        console.error(err);
-                    });
             }
 
-            // Add event listeners
-            convertBtn.addEventListener('click', performConversion);
-            copyBtn.addEventListener('click', copyRubyToClipboard);
-            inputText.addEventListener('input', performConversion);
-            targetSyllabary.addEventListener('change', performConversion);
-            conversionMode.addEventListener('change', () => {
-                updateIncludeKatakanaAvailability();
+            function createComparisonCard(mode) {
+                const card = document.createElement('article');
+                card.className = mode === 'furigana_map' ? 'comparison-card wide' : 'comparison-card';
+
+                const head = document.createElement('div');
+                head.className = 'comparison-head';
+
+                const title = document.createElement('div');
+                title.className = 'mode-name';
+                title.textContent = mode;
+
+                const note = document.createElement('div');
+                note.className = 'mode-note';
+                note.textContent = modeLabels[mode];
+
+                head.append(title, note);
+
+                const body = document.createElement('div');
+                body.className = 'comparison-body';
+
+                const options = document.createElement('pre');
+                options.className = 'options-snippet code-block';
+
+                const result = document.createElement('div');
+                result.className = 'result-box compact loading';
+                result.textContent = 'Converting...';
+
+                body.append(options, result);
+                card.append(head, body);
+
+                return { card, options, result };
+            }
+
+            async function performModeComparison() {
+                const runId = ++comparisonRunId;
+
+                comparisonGrid.replaceChildren();
+
+                const renderedCards = comparisonModes.map(mode => {
+                    const elements = createComparisonCard(mode);
+                    const options = buildComparisonOptions(mode);
+                    elements.options.textContent = JSON.stringify(options, null, 2);
+                    comparisonGrid.appendChild(elements.card);
+                    return { mode, options, resultEl: elements.result };
+                });
+
+                const conversions = renderedCards.map(item =>
+                    kuroshiro.convert(comparisonText, item.options)
+                        .then(result => ({ mode: item.mode, result }))
+                );
+
+                const settled = await Promise.allSettled(conversions);
+                if (runId !== comparisonRunId) return;
+
+                settled.forEach((outcome, index) => {
+                    const target = renderedCards[index].resultEl;
+                    target.className = 'result-box compact';
+
+                    if (outcome.status === 'fulfilled') {
+                        renderResult(target, outcome.value.mode, outcome.value.result);
+                    } else {
+                        renderError(target, outcome.reason);
+                    }
+                });
+            }
+
+            function runConversion() {
+                if (!isReady) return;
                 performConversion();
+            }
+
+            function runConversionAndComparison() {
+                if (!isReady) return;
+                performConversion();
+                performModeComparison();
+            }
+
+            function scheduleConversion() {
+                if (!isReady) return;
+                window.clearTimeout(debounceTimer);
+                debounceTimer = window.setTimeout(runConversion, 250);
+            }
+
+            kuroshiro.init(new KuromojiAnalyzer({ dictPath: getDictionaryPath() }))
+                .then(() => {
+                    isReady = true;
+                    convertBtn.disabled = false;
+                    convertBtn.textContent = 'Convert';
+                    inputText.disabled = false;
+                    targetSyllabary.disabled = false;
+                    conversionMode.disabled = false;
+                    includeKatakana.disabled = false;
+                    runConversion();
+                    performModeComparison();
+                })
+                .catch(err => {
+                    resultDiv.className = 'result-box error';
+                    resultDiv.textContent = `Initialization failed: ${err.message}`;
+                    comparisonGrid.replaceChildren();
+                    console.error(err);
+                });
+
+            convertBtn.addEventListener('click', () => {
+                window.clearTimeout(debounceTimer);
+                runConversion();
             });
-            includeKatakana.addEventListener('change', performConversion);
+            copyBtn.addEventListener('click', copyResultToClipboard);
+            inputText.addEventListener('input', scheduleConversion);
+            targetSyllabary.addEventListener('change', runConversionAndComparison);
+            conversionMode.addEventListener('change', performConversion);
+            includeKatakana.addEventListener('change', runConversion);
         });
     </script>
-
 </body>
 
 </html>
