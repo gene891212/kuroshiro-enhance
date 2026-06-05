@@ -101,7 +101,7 @@ class Kuroshiro {
                         return tokens.map(token => token.reading).join("");
                     }
                     return tokens.map(token => token.reading).join(" ");
-                case "romaji":
+                case "romaji": {
                     const romajiConv = (token: any) => {
                         let preToken;
                         if (hasJapanese(token.surface_form)) {
@@ -116,6 +116,7 @@ class Kuroshiro {
                         return tokens.map(romajiConv).join("");
                     }
                     return tokens.map(romajiConv).join(" ");
+                }
                 case "hiragana":
                     for (let hi = 0; hi < tokens.length; hi++) {
                         if (hasKanji(tokens[hi].surface_form)) {
@@ -172,7 +173,7 @@ class Kuroshiro {
                     case 0:
                         notations.push([tokens[i].surface_form, 1, toRawHiragana(tokens[i].reading), tokens[i].pronunciation || tokens[i].reading]);
                         break;
-                    case 1:
+                    case 1: {
                         let pattern = "";
                         let isLastTokenKanji = false;
                         const subs = []; // recognize kanjis and group them
@@ -211,6 +212,7 @@ class Kuroshiro {
                             notations.push([tokens[i].surface_form, 1, toRawHiragana(tokens[i].reading), tokens[i].pronunciation || tokens[i].reading]);
                         }
                         break;
+                    }
                     case 2:
                         for (let c2 = 0; c2 < tokens[i].surface_form.length; c2++) {
                             notations.push([tokens[i].surface_form[c2], 2, toRawHiragana(tokens[i].reading[c2]), (tokens[i].pronunciation && tokens[i].pronunciation[c2]) || tokens[i].reading[c2]]);

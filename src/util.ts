@@ -1399,12 +1399,15 @@ const toRawRomaji = function (str: string, system?: string) {
     // [ALL] kana to roman chars
     const max = str.length;
     while (pnt <= max) {
-        if (r = romajiSystem[system][str.substring(pnt, pnt + 2)]) {
+        r = romajiSystem[system][str.substring(pnt, pnt + 2)];
+        if (r) {
             result += r;
             pnt += 2;
         }
         else {
-            result += (r = romajiSystem[system][ch = str.substring(pnt, pnt + 1)]) ? r : ch;
+            ch = str.substring(pnt, pnt + 1);
+            r = romajiSystem[system][ch];
+            result += r ? r : ch;
             pnt += 1;
         }
     }
