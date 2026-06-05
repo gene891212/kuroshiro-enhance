@@ -19,21 +19,37 @@ import {
     kanaToKatakana,
     kanaToRomaji
 } from "./util.js";
+import type { Analyzer, ConvertOptions, FuriganaMapResult, Token } from "./types.js";
+
+/**
+ * Internal notation tuple produced while building okurigana/furigana output.
+ * type: 1 = kanji, 2 = kana, 3 = others
+ */
+type NotationType = 1 | 2 | 3;
+type Notation = [base: string, type: NotationType, hiragana: string, pronunciation: string];
+
+const Util = {
+    isHiragana,
+    isKatakana,
+    isKana,
+    isKanji,
+    isJapanese,
+    hasHiragana,
+    hasKatakana,
+    hasKana,
+    hasKanji,
+    hasJapanese,
+    kanaToHiragna,
+    kanaToKatakana,
+    kanaToRomaji
+};
 
 /**
  * Kuroshiro Class
  */
 class Kuroshiro {
-    static Util: any;
-    private _analyzer: any = null;
-
-    /**
-     * Constructor
-     * @constructs Kuroshiro
-     */
-    constructor() {
-        this._analyzer = null;
-    }
+    static Util = Util;
+    private _analyzer: Analyzer | null = null;
 
     /**
      * Initialize Kuroshiro
@@ -41,7 +57,7 @@ class Kuroshiro {
      * @instance
      * @returns {Promise} Promise object represents the result of initialization
      */
-    async init(analyzer: any): Promise<void> {
+    async init(analyzer: Analyzer): Promise<void> {
         if (!analyzer || typeof analyzer !== "object" || typeof analyzer.init !== "function" || typeof analyzer.parse !== "function") {
             throw new Error("Invalid initialization parameter.");
         }
@@ -68,7 +84,7 @@ class Kuroshiro {
      * @param {string} [options.delimiter_end=")"] Delimiter(End)
      * @returns {Promise} Promise object represents the result of conversion
      */
-    async convert(str: string, options?: any): Promise<any> {
+    async convert(str: string, options?: ConvertOptions): Promise<string | FuriganaMapResult> {
         options = options || {};
         options.to = options.to || "hiragana";
         options.mode = options.mode || "normal";
@@ -91,8 +107,12 @@ class Kuroshiro {
             throw new Error("Invalid Romanization System.");
         }
 
+        if (this._analyzer === null) {
+            throw new Error("Kuroshiro has not been initialized. Please call init() first.");
+        }
         const rawTokens = await this._analyzer.parse(str);
-        const tokens = patchTokens(rawTokens);
+        type PatchedToken = Token & { reading: string };
+        const tokens = patchTokens(rawTokens) as PatchedToken[];
 
         if (options.mode === "normal" || options.mode === "spaced") {
             switch (options.to) {
@@ -166,7 +186,7 @@ class Kuroshiro {
             }
         }
         else if (options.mode === "okurigana" || options.mode === "furigana" || options.mode === "furigana_map") {
-            const notations = []; // [basic, basic_type[1=kanji,2=kana,3=others], notation, pronunciation]
+            const notations: Notation[] = [];
             for (let i = 0; i < tokens.length; i++) {
                 const strType = getStrType(tokens[i].surface_form);
                 switch (strType) {
@@ -215,7 +235,7 @@ class Kuroshiro {
                     }
                     case 2:
                         for (let c2 = 0; c2 < tokens[i].surface_form.length; c2++) {
-                            notations.push([tokens[i].surface_form[c2], 2, toRawHiragana(tokens[i].reading[c2]), (tokens[i].pronunciation && tokens[i].pronunciation[c2]) || tokens[i].reading[c2]]);
+                            notations.push([tokens[i].surface_form[c2], 2, toRawHiragana(tokens[i].reading[c2]), tokens[i].pronunciation?.[c2] ?? tokens[i].reading[c2]]);
                         }
                         break;
                     case 3:
@@ -356,25 +376,8 @@ class Kuroshiro {
                     throw new Error("Invalid Target Syllabary.");
             }
         }
+        throw new Error("Invalid Conversion Mode.");
     }
 }
-
-const Util = {
-    isHiragana,
-    isKatakana,
-    isKana,
-    isKanji,
-    isJapanese,
-    hasHiragana,
-    hasKatakana,
-    hasKana,
-    hasKanji,
-    hasJapanese,
-    kanaToHiragna,
-    kanaToKatakana,
-    kanaToRomaji
-};
-
-Kuroshiro.Util = Util;
 
 export default Kuroshiro;

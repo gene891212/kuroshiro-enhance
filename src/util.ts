@@ -1,10 +1,12 @@
+import type { Token } from "./types.js";
+
 const KATAKANA_HIRAGANA_SHIFT = "\u3041".charCodeAt(0) - "\u30a1".charCodeAt(0);
 const HIRAGANA_KATAKANA_SHIFT = "\u30a1".charCodeAt(0) - "\u3041".charCodeAt(0);
 const ROMANIZATION_SYSTEM = {
     NIPPON: "nippon",
     PASSPORT: "passport",
     HEPBURN: "hepburn"
-};
+} as const;
 
 /**
  * Check if given char is a hiragana
@@ -1476,7 +1478,7 @@ const getStrType = function (str: string) {
  * @param {Object} tokens Given tokens
  * @return {Object} Patched tokens
  */
-const patchTokens = function (tokens: any[]) {
+const patchTokens = function (tokens: Token[]): Token[] {
     // patch for token structure
     for (let cr = 0; cr < tokens.length; cr++) {
         if (hasJapanese(tokens[cr].surface_form)) {
@@ -1488,8 +1490,8 @@ const patchTokens = function (tokens: any[]) {
                     tokens[cr].reading = tokens[cr].surface_form;
                 }
             }
-            else if (hasHiragana(tokens[cr].reading)) {
-                tokens[cr].reading = toRawKatakana(tokens[cr].reading);
+            else if (hasHiragana(tokens[cr].reading!)) {
+                tokens[cr].reading = toRawKatakana(tokens[cr].reading!);
             }
         }
         else {
@@ -1506,9 +1508,9 @@ const patchTokens = function (tokens: any[]) {
                     tokens[i - 1].pronunciation += "ー";
                 }
                 else {
-                    tokens[i - 1].pronunciation = `${tokens[i - 1].reading}ー`;
+                    tokens[i - 1].pronunciation = `${tokens[i - 1].reading ?? ""}ー`;
                 }
-                tokens[i - 1].reading += "ウ";
+                tokens[i - 1].reading = (tokens[i - 1].reading ?? "") + "ウ";
                 tokens.splice(i, 1);
                 i--;
             }
@@ -1521,12 +1523,12 @@ const patchTokens = function (tokens: any[]) {
             if (j + 1 < tokens.length) {
                 tokens[j].surface_form += tokens[j + 1].surface_form;
                 if (tokens[j].pronunciation) {
-                    tokens[j].pronunciation += tokens[j + 1].pronunciation;
+                    tokens[j].pronunciation += tokens[j + 1].pronunciation ?? "";
                 }
                 else {
-                    tokens[j].pronunciation = `${tokens[j].reading}${tokens[j + 1].reading}`;
+                    tokens[j].pronunciation = `${tokens[j].reading ?? ""}${tokens[j + 1].reading ?? ""}`;
                 }
-                tokens[j].reading += tokens[j + 1].reading;
+                tokens[j].reading = (tokens[j].reading ?? "") + (tokens[j + 1].reading ?? "");
                 tokens.splice(j + 1, 1);
                 j--;
             }
