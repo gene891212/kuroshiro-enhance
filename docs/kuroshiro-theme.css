@@ -1,0 +1,284 @@
+/* ============================================================
+   kuroshiro-enhance · Colors & Type
+   --------------------------------------------------------------
+   Source of truth for color tokens, typography tokens, and the
+   semantic CSS that maps tokens onto common element selectors.
+   ============================================================ */
+
+/* ---------- 1. Brand color palette ---------- */
+:root {
+  /* Primary navy — strong, calm, trustworthy. Use for body text,
+     primary fills, headlines, lockups. */
+  --ke-navy-50:  #eef1f8;
+  --ke-navy-100: #d6def0;
+  --ke-navy-200: #adbce0;
+  --ke-navy-300: #7a8fcc;
+  --ke-navy-400: #4b69b6;
+  --ke-navy-500: #28499d; /* ← brand primary */
+  --ke-navy-600: #1f3a82;
+  --ke-navy-700: #182d66;
+  --ke-navy-800: #11214b;
+  --ke-navy-900: #0a1633;
+
+  /* Accent violet — used sparingly: emphasis, highlights,
+     active states. */
+  --ke-violet-50:  #efedf6;
+  --ke-violet-100: #d8d3eb;
+  --ke-violet-200: #b3aad7;
+  --ke-violet-300: #8c80c0;
+  --ke-violet-400: #6a5cad;
+  --ke-violet-500: #504098; /* ← brand accent */
+  --ke-violet-600: #3f3279;
+  --ke-violet-700: #30265c;
+  --ke-violet-800: #221b41;
+  --ke-violet-900: #15102a;
+
+  /* Neutral ramp — cool-leaning grays so they sit next to navy
+     without going muddy. */
+  --ke-ink-0:    #ffffff;
+  --ke-ink-25:   #fafbfd;
+  --ke-ink-50:   #f4f6fa;
+  --ke-ink-100:  #e8ecf3;
+  --ke-ink-200:  #d3d9e4;
+  --ke-ink-300:  #b1b9c8;
+  --ke-ink-400:  #828ca0;
+  --ke-ink-500:  #5a6377;
+  --ke-ink-600:  #3d4557;
+  --ke-ink-700:  #2a3142;
+  --ke-ink-800:  #1a2030;
+  --ke-ink-900:  #0d111c;
+
+  /* Semantic — used for status: success / warn / danger / info.
+     Picked to harmonize with navy + violet, not fight them. */
+  --ke-success: #22875a;
+  --ke-warn:    #c47a16;
+  --ke-danger:  #c4334d;
+  --ke-info:    var(--ke-navy-500);
+
+  /* ---------- 2. Semantic surface + text aliases ----------
+     Use these in components, not the raw scale, so theming
+     (incl. future dark mode) is a single edit. */
+
+  --fg-1: var(--ke-ink-900);          /* primary text */
+  --fg-2: var(--ke-ink-600);          /* secondary text */
+  --fg-3: var(--ke-ink-400);          /* tertiary / placeholder */
+  --fg-on-brand: var(--ke-ink-0);     /* text on navy fills */
+  --fg-brand: var(--ke-navy-500);     /* tinted text (links, headings opt) */
+  --fg-accent: var(--ke-violet-500);
+
+  --bg-1: var(--ke-ink-0);            /* page background */
+  --bg-2: var(--ke-ink-25);           /* subtle surface */
+  --bg-3: var(--ke-ink-50);           /* hairline tinted block */
+  --bg-brand: var(--ke-navy-500);     /* primary navy fill */
+  --bg-brand-deep: var(--ke-navy-800);/* full-bleed dark sections */
+  --bg-accent: var(--ke-violet-500);
+
+  --border-1: var(--ke-ink-200);      /* default hairline */
+  --border-2: var(--ke-ink-100);      /* lighter divider */
+  --border-strong: var(--ke-ink-700); /* high-contrast outline */
+  --border-brand: var(--ke-navy-500);
+
+  /* ---------- 3. Spacing scale ----------
+     4-px base. Tight enough for mobile, expressive enough for
+     marketing pages. */
+  --sp-0:   0;
+  --sp-1:   4px;
+  --sp-2:   8px;
+  --sp-3:   12px;
+  --sp-4:   16px;
+  --sp-5:   20px;
+  --sp-6:   24px;
+  --sp-7:   32px;
+  --sp-8:   40px;
+  --sp-9:   48px;
+  --sp-10:  64px;
+  --sp-11:  80px;
+  --sp-12:  96px;
+  --sp-13:  128px;
+
+  /* ---------- 4. Radius ----------
+      Radii are deliberately conservative; keep mostly 4–12px. */
+  --r-0:  0;
+  --r-1:  2px;
+  --r-2:  4px;
+  --r-3:  8px;
+  --r-4:  12px;
+  --r-5:  16px;
+  --r-pill: 999px;
+
+  /* ---------- 5. Shadows ----------
+     Tinted with navy so elevation feels native to the brand.
+     Never use pure-black shadows. */
+  --shadow-1: 0 1px 2px rgba(17, 33, 75, 0.06),
+              0 1px 1px rgba(17, 33, 75, 0.04);
+  --shadow-2: 0 4px 12px rgba(17, 33, 75, 0.08),
+              0 1px 2px rgba(17, 33, 75, 0.04);
+  --shadow-3: 0 10px 28px rgba(17, 33, 75, 0.12),
+              0 2px 4px rgba(17, 33, 75, 0.06);
+  --shadow-4: 0 24px 56px rgba(17, 33, 75, 0.18),
+              0 4px 10px rgba(17, 33, 75, 0.08);
+  /* Inner focus ring — accessible 3px violet halo */
+  --ring-focus: 0 0 0 3px rgba(80, 64, 152, 0.30);
+
+   /* ---------- 6. Typography scale ----------
+      Type stack:
+        Display + UI  →  Inter (Google Fonts)
+        Han (中文)    →  Noto Sans TC for CJK runs in mixed copy.
+        Mono         →  JetBrains Mono for code / numerals. */
+  --font-sans: "Inter", "Noto Sans TC", -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-han:  "Noto Sans TC", "PingFang TC", "Microsoft JhengHei",
+               "Heiti TC", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+               Consolas, monospace;
+
+  /* Modular type ramp — 1.2 ratio. */
+  --fs-12: 0.75rem;     /* 12 */
+  --fs-13: 0.8125rem;   /* 13 */
+  --fs-14: 0.875rem;    /* 14 */
+  --fs-15: 0.9375rem;   /* 15 */
+  --fs-16: 1rem;        /* 16 */
+  --fs-18: 1.125rem;    /* 18 */
+  --fs-20: 1.25rem;     /* 20 */
+  --fs-24: 1.5rem;      /* 24 */
+  --fs-30: 1.875rem;    /* 30 */
+  --fs-36: 2.25rem;     /* 36 */
+  --fs-48: 3rem;        /* 48 */
+  --fs-60: 3.75rem;     /* 60 */
+  --fs-72: 4.5rem;      /* 72 */
+
+  --lh-tight:   1.1;
+  --lh-snug:    1.25;
+  --lh-normal:  1.45;
+  --lh-loose:   1.65;
+
+  --tracking-tight:  -0.02em;
+  --tracking-snug:   -0.01em;
+  --tracking-normal: 0;
+  --tracking-loose:  0.04em;
+  --tracking-cap:    0.12em;  /* small caps / eyebrow labels */
+
+  /* ---------- 7. Motion ----------
+     Easings biased toward "precision instrument" — controlled,
+     no rubber-band. No spring overshoots in product UI. */
+  --ease-out:  cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in:   cubic-bezier(0.6, 0, 0.8, 0.2);
+  --ease-inout:cubic-bezier(0.5, 0, 0.2, 1);
+  --dur-1:  120ms;  /* press / hover */
+  --dur-2:  200ms;  /* most UI transitions */
+  --dur-3:  320ms;  /* enter / exit */
+  --dur-4:  480ms;  /* hero, marketing reveals */
+}
+
+/* ---------- 8. Element-level semantic CSS ----------
+   Drop this on a page and headings, body, links, code already
+   look styled — no extra classes required. */
+
+html, body {
+  font-family: var(--font-sans);
+  color: var(--fg-1);
+  background: var(--bg-1);
+  font-size: var(--fs-16);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .ke-h1 {
+  font-size: var(--fs-60);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 700;
+  color: var(--ke-navy-800);
+  margin: 0 0 var(--sp-5);
+}
+h2, .ke-h2 {
+  font-size: var(--fs-36);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-snug);
+  font-weight: 700;
+  color: var(--ke-navy-800);
+  margin: 0 0 var(--sp-4);
+}
+h3, .ke-h3 {
+  font-size: var(--fs-24);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-snug);
+  font-weight: 600;
+  color: var(--ke-navy-800);
+  margin: 0 0 var(--sp-3);
+}
+h4, .ke-h4 {
+  font-size: var(--fs-18);
+  line-height: var(--lh-snug);
+  font-weight: 600;
+  color: var(--ke-navy-800);
+  margin: 0 0 var(--sp-2);
+}
+
+p, .ke-body {
+  font-size: var(--fs-16);
+  line-height: var(--lh-normal);
+  color: var(--fg-1);
+  margin: 0 0 var(--sp-4);
+  text-wrap: pretty;
+}
+.ke-lede {
+  font-size: var(--fs-20);
+  line-height: var(--lh-snug);
+  color: var(--fg-2);
+}
+small, .ke-small {
+  font-size: var(--fs-13);
+  color: var(--fg-2);
+}
+
+/* Eyebrow / kicker — small navy uppercase label for section headers. */
+.ke-eyebrow {
+  font-size: var(--fs-12);
+  font-weight: 600;
+  letter-spacing: var(--tracking-cap);
+  text-transform: uppercase;
+  color: var(--ke-violet-500);
+}
+
+a, .ke-link {
+  color: var(--ke-navy-500);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--dur-1) var(--ease-out),
+              border-color var(--dur-1) var(--ease-out);
+}
+a:hover, .ke-link:hover {
+  color: var(--ke-violet-500);
+  border-bottom-color: currentColor;
+}
+
+code, kbd, samp, .ke-code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--bg-3);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-2);
+  padding: 1px 6px;
+  color: var(--ke-navy-700);
+}
+pre {
+  font-family: var(--font-mono);
+  font-size: var(--fs-13);
+  background: var(--ke-ink-900);
+  color: var(--ke-ink-50);
+  padding: var(--sp-5);
+  border-radius: var(--r-3);
+  overflow: auto;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--border-1);
+  margin: var(--sp-7) 0;
+}
+
+::selection { background: var(--ke-violet-200); color: var(--ke-navy-900); }
+:focus-visible { outline: none; box-shadow: var(--ring-focus); border-radius: var(--r-2); }

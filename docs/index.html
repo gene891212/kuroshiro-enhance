@@ -1,113 +1,253 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kuroshiro-enhance Demo | Japanese Kana, Romaji & Furigana Converter</title>
+    <meta
+      name="description"
+      content="Try kuroshiro-enhance, a JavaScript library for converting Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana, Katakana ruby annotations, and structured ruby output."
+    />
+    <meta
+      name="keywords"
+      content="kuroshiro-enhance, Japanese converter, Hiragana converter, Katakana converter, Romaji converter, furigana, okurigana, ruby annotations, JavaScript library"
+    />
+    <meta name="author" content="gene891212" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://gene891212.github.io/kuroshiro-enhance/" />
+    <meta property="og:title" content="kuroshiro-enhance Demo | Japanese Kana, Romaji & Furigana Converter" />
+    <meta
+      property="og:description"
+      content="Convert Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana, Katakana ruby annotations, and structured ruby output."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gene891212.github.io/kuroshiro-enhance/" />
+    <meta property="og:image" content="https://gene891212.github.io/kuroshiro-enhance/demo.png" />
+    <meta
+      property="og:image:alt"
+      content="kuroshiro-enhance demo showing Japanese conversion output with furigana options."
+    />
+    <meta property="og:site_name" content="kuroshiro-enhance" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="kuroshiro-enhance Demo | Japanese Kana, Romaji & Furigana Converter" />
+    <meta
+      name="twitter:description"
+      content="Convert Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana, Katakana ruby annotations, and structured ruby output."
+    />
+    <meta name="twitter:image" content="https://gene891212.github.io/kuroshiro-enhance/demo.png" />
+    <meta name="theme-color" content="#f7f4ed" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="kuroshiro-theme.css" />
+    <link rel="stylesheet" href="kuroshiro-demo.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <!-- Top nav -->
+    <header class="ke-nav">
+      <div class="ke-nav-inner">
+        <a class="ke-brand" href="#top">
+          <img src="favicon.svg" alt="kuroshiro-enhance logo" />
+          <span class="ke-brand-divider"></span>
+          <span class="ke-brand-product">kuroshiro-enhance</span>
+        </a>
+        <nav class="ke-nav-links" aria-label="Page sections">
+          <a href="#playground">Playground</a>
+          <a href="#comparison">Compare</a>
+          <a href="#docs">Docs</a>
+        </nav>
+        <a
+          class="btn btn-secondary btn-sm"
+          href="https://github.com/gene891212/kuroshiro-enhance"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="flex-shrink: 0"
+          >
+            <path
+              d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+            />
+            <path d="M9 18c-4.51 2-5-2-7-2" />
+          </svg>
+          View on GitHub
+        </a>
+      </div>
+    </header>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kuroshiro-enhance Demo</title>
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-    <link rel="stylesheet" href="style.css">
-</head>
+    <main class="page" id="top">
+      <!-- Hero -->
+      <section class="hero">
+        <h1><span class="hero-accent">kuroshiro-enhance</span></h1>
+        <h2>Convert Japanese text precisely.</h2>
+        <p class="lede">
+          A JavaScript library that converts Japanese text to Hiragana, Katakana, or Romaji — with furigana, okurigana,
+          Katakana ruby annotations, and structured ruby output for custom renderers.
+        </p>
+        <div class="hero-meta">
+          <span class="hero-chip"><i data-lucide="package"></i> npm install kuroshiro-enhance</span>
+          <span class="hero-chip"><i data-lucide="globe"></i> Browser &amp; Node.js</span>
+          <span class="hero-chip"><i data-lucide="zap"></i> Kuromoji analyzer</span>
+        </div>
+      </section>
 
-<body>
-    <main class="page">
-        <header class="hero">
-            <h1>kuroshiro-enhance</h1>
-            <p class="lede">
-                Convert Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana,
-                Katakana ruby annotations, and structured ruby output for custom renderers.
+      <!-- Playground -->
+      <section class="section" id="playground" aria-labelledby="playground-title">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">01 · Playground</span>
+            <h2 id="playground-title">Try a conversion mode</h2>
+            <p class="section-sub">
+              Edit the Japanese input on the left, tune options, and see the converted output update on the right.
             </p>
-            <div class="actions" aria-label="Project link">
-                <a class="action-link" href="https://github.com/gene891212/kuroshiro-enhance" target="_blank" rel="noreferrer">View on GitHub</a>
-            </div>
-        </header>
+          </div>
+        </div>
 
-        <section class="section" aria-labelledby="playground-title">
-            <div class="section-header">
-                <div>
-                    <h2 id="playground-title">Playground</h2>
-                    <p>Try a conversion mode with your own input.</p>
-                </div>
-            </div>
-
-            <div class="playground">
-                <div class="form-grid">
-                    <div class="field full">
-                        <label for="inputText">Japanese text</label>
-                        <textarea id="inputText" rows="4" placeholder="ここに日本語の文章を入力してください。" class="japanese-text" disabled>壁の写真 錆びたフレーム
+        <div class="playground card">
+          <div class="play-grid">
+            <!-- Left: input + options -->
+            <div class="play-col play-col-input">
+              <div class="field">
+                <label for="inputText">Japanese text</label>
+                <textarea
+                  id="inputText"
+                  rows="6"
+                  placeholder="ここに日本語の文章を入力してください。"
+                  class="japanese-text"
+                  disabled
+                >
+壁の写真 錆びたフレーム
 空の花瓶 あの日のままで
 捨てられない 古びたテディベア
-擦り切れたネイビーのコート</textarea>
-                    </div>
+擦り切れたネイビーのコート</textarea
+                >
+              </div>
 
-                    <div class="field">
-                        <label for="targetSyllabary">To</label>
-                        <select id="targetSyllabary" disabled>
-                            <option value="hiragana">Hiragana</option>
-                            <option value="katakana">Katakana</option>
-                            <option value="romaji">Romaji</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="conversionMode">Mode</label>
-                        <select id="conversionMode" disabled>
-                            <option value="furigana">furigana</option>
-                            <option value="furigana_map">furigana_map</option>
-                            <option value="okurigana">okurigana</option>
-                            <option value="normal">normal</option>
-                            <option value="spaced">spaced</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="includeKatakana">Include Katakana ruby</label>
-                        <select id="includeKatakana" disabled>
-                            <option value="true">true</option>
-                            <option value="false">false</option>
-                        </select>
-                        <span class="hint">Applied to <code>furigana</code> and <code>furigana_map</code> only.</span>
-                    </div>
+              <div class="options-grid">
+                <div class="field">
+                  <label for="targetSyllabary">Output</label>
+                  <select id="targetSyllabary" disabled>
+                    <option value="hiragana">Hiragana</option>
+                    <option value="katakana">Katakana</option>
+                    <option value="romaji">Romaji</option>
+                  </select>
                 </div>
-
-                <button id="convertBtn" class="convert-btn" disabled>Initializing...</button>
-
-                <div class="result-container">
-                    <button id="copyBtn" class="copy-btn" style="display: none;">Copy result</button>
-                    <div id="result" class="result-box loading">Loading dictionary...</div>
+                <div class="field">
+                  <label for="conversionMode">Mode</label>
+                  <select id="conversionMode" disabled>
+                    <option value="furigana">furigana</option>
+                    <option value="furigana_map">furigana_map</option>
+                    <option value="okurigana">okurigana</option>
+                    <option value="normal">normal</option>
+                    <option value="spaced">spaced</option>
+                  </select>
                 </div>
-            </div>
-        </section>
-
-        <section class="section" aria-labelledby="comparison-title">
-            <div class="section-header">
-                <div>
-                    <h2 id="comparison-title">Mode comparison</h2>
-                    <p>Compare each mode using the same sample text.</p>
+                <div class="field field-full">
+                  <label for="includeKatakana">Include Katakana ruby</label>
+                  <select id="includeKatakana" disabled>
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                  </select>
+                  <span class="hint">Applied to <code>furigana</code> and <code>furigana_map</code> only.</span>
                 </div>
-            </div>
-            <p class="comparison-sample">Sample: <span class="japanese-text">最後のステージから over and over</span></p>
-            <div id="comparisonGrid" class="comparison-grid" aria-live="polite"></div>
-        </section>
+              </div>
 
-        <section class="section docs-layout" aria-labelledby="docs-title">
-            <div class="section-header">
-                <div>
-                    <h2 id="docs-title">Quick docs</h2>
-                    <p>Install the package, initialize an analyzer, then call <code>convert()</code> with the output options shown above.</p>
-                </div>
+              <button id="convertBtn" class="btn btn-primary btn-block" disabled>
+                <i data-lucide="loader-2" class="spin"></i>
+                <span class="btn-label">Initializing…</span>
+              </button>
             </div>
 
+            <!-- Right: result -->
+            <div class="play-col play-col-result">
+              <div class="result-header">
+                <span class="result-label">
+                  <span class="status-dot"></span>
+                  Result
+                </span>
+                <button id="copyBtn" class="btn btn-ghost btn-sm" style="display: none">
+                  <i data-lucide="copy"></i>
+                  <span class="copy-label">Copy result</span>
+                </button>
+              </div>
+              <div id="result" class="result-box loading">Loading dictionary…</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mode comparison -->
+      <section class="section" id="comparison" aria-labelledby="comparison-title">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">02 · Compare</span>
+            <h2 id="comparison-title">Mode comparison</h2>
+            <p class="section-sub">Same input, five output modes — side by side.</p>
+          </div>
+          <div class="sample-block">
+            <span class="sample-label">Sample</span>
+            <span class="japanese-text sample-text">最後のステージから over and over</span>
+          </div>
+        </div>
+        <div id="comparisonGrid" class="comparison-grid" aria-live="polite"></div>
+      </section>
+
+      <!-- Docs -->
+      <section class="section docs-section" id="docs" aria-labelledby="docs-title">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">03 · Reference</span>
+            <h2 id="docs-title">Quick docs</h2>
+            <p class="section-sub">
+              Install the package, initialize an analyzer, then call
+              <code>convert()</code> with the output options from the playground.
+            </p>
+          </div>
+        </div>
+
+        <div class="docs-layout">
+          <aside class="docs-toc" aria-label="Docs contents">
+            <span class="toc-label">On this page</span>
+            <ol>
+              <li><a href="#install">Install</a></li>
+              <li><a href="#browser">Browser usage</a></li>
+              <li><a href="#node">Node.js usage</a></li>
+              <li><a href="#api">API options</a></li>
+              <li><a href="#structured">Structured ruby</a></li>
+              <li><a href="#analyzer">Dictionary files</a></li>
+            </ol>
+          </aside>
+
+          <div class="docs-body">
             <section id="install" class="doc-section" aria-labelledby="install-title">
-                <h3 id="install-title">Install</h3>
-                <p>Install the package and an analyzer plugin.</p>
-                <pre class="code-block"><code>npm install kuroshiro-enhance kuroshiro-analyzer-kuromoji</code></pre>
+              <h3 id="install-title">Install</h3>
+              <p>Install the package and an analyzer plugin.</p>
+              <pre class="code-block"><code>npm install kuroshiro-enhance kuroshiro-analyzer-kuromoji</code></pre>
             </section>
 
-            <section class="doc-section" aria-labelledby="browser-title">
-                <h3 id="browser-title">Browser usage</h3>
-                <p>The browser bundle does not include analyzer plugins or dictionary files. Load both bundles and pass a dictionary path.</p>
-                <pre class="code-block"><code>&lt;script src="https://unpkg.com/kuroshiro-enhance@latest/dist/kuroshiro.min.js"&gt;&lt;/script&gt;
+            <section id="browser" class="doc-section" aria-labelledby="browser-title">
+              <h3 id="browser-title">Browser usage</h3>
+              <p>
+                The browser bundle does not include analyzer plugins or dictionary files. Load both bundles and pass a
+                dictionary path.
+              </p>
+              <pre
+                class="code-block"
+              ><code>&lt;script src="https://unpkg.com/kuroshiro-enhance@latest/dist/kuroshiro.min.js"&gt;&lt;/script&gt;
 &lt;script src="https://unpkg.com/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
@@ -122,9 +262,9 @@
 &lt;/script&gt;</code></pre>
             </section>
 
-            <section class="doc-section" aria-labelledby="node-title">
-                <h3 id="node-title">Node.js usage</h3>
-                <pre class="code-block"><code>import Kuroshiro from "kuroshiro-enhance";
+            <section id="node" class="doc-section" aria-labelledby="node-title">
+              <h3 id="node-title">Node.js usage</h3>
+              <pre class="code-block"><code>import Kuroshiro from "kuroshiro-enhance";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 
 const kuroshiro = new Kuroshiro();
@@ -138,51 +278,68 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
             </section>
 
             <section id="api" class="doc-section" aria-labelledby="api-title">
-                <h3 id="api-title">API options</h3>
-                <div class="api-table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Option</th>
-                                <th>Default</th>
-                                <th>Values</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>to</code></td>
-                                <td><code>"hiragana"</code></td>
-                                <td><code>"hiragana"</code>, <code>"katakana"</code>, <code>"romaji"</code></td>
-                                <td>Target syllabary or romanization output.</td>
-                            </tr>
-                            <tr>
-                                <td><code>mode</code></td>
-                                <td><code>"normal"</code></td>
-                                <td><code>"normal"</code>, <code>"spaced"</code>, <code>"okurigana"</code>, <code>"furigana"</code>, <code>"furigana_map"</code></td>
-                                <td>Controls whether the result is plain text, annotated text, ruby HTML, or structured ruby spans.</td>
-                            </tr>
-                            <tr>
-                                <td><code>includeKatakana</code></td>
-                                <td><code>false</code></td>
-                                <td><code>true</code>, <code>false</code></td>
-                                <td>Adds ruby annotations to Katakana segments in <code>furigana</code> and <code>furigana_map</code> modes.</td>
-                            </tr>
-                            <tr>
-                                <td><code>romajiSystem</code></td>
-                                <td><code>"hepburn"</code></td>
-                                <td><code>"hepburn"</code>, <code>"nippon"</code>, <code>"passport"</code></td>
-                                <td>Romanization system used when <code>to</code> is <code>"romaji"</code>.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+              <h3 id="api-title">API options</h3>
+              <div class="api-table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Option</th>
+                      <th>Default</th>
+                      <th>Values</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>to</code></td>
+                      <td><code>"hiragana"</code></td>
+                      <td>
+                        <code>"hiragana"</code>, <code>"katakana"</code>,
+                        <code>"romaji"</code>
+                      </td>
+                      <td>Target syllabary or romanization output.</td>
+                    </tr>
+                    <tr>
+                      <td><code>mode</code></td>
+                      <td><code>"normal"</code></td>
+                      <td>
+                        <code>"normal"</code>, <code>"spaced"</code>, <code>"okurigana"</code>, <code>"furigana"</code>,
+                        <code>"furigana_map"</code>
+                      </td>
+                      <td>
+                        Controls whether the result is plain text, annotated text, ruby HTML, or structured ruby spans.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><code>includeKatakana</code></td>
+                      <td><code>false</code></td>
+                      <td><code>true</code>, <code>false</code></td>
+                      <td>
+                        Adds ruby annotations to Katakana segments in
+                        <code>furigana</code> and <code>furigana_map</code> modes.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><code>romajiSystem</code></td>
+                      <td><code>"hepburn"</code></td>
+                      <td>
+                        <code>"hepburn"</code>, <code>"nippon"</code>,
+                        <code>"passport"</code>
+                      </td>
+                      <td>Romanization system used when <code>to</code> is <code>"romaji"</code>.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </section>
 
-            <section class="doc-section" aria-labelledby="features-title">
-                <h3 id="features-title">Structured ruby output</h3>
-                <p><code>includeKatakana</code> is useful when Katakana loanwords or names should also receive ruby. <code>furigana_map</code> returns structured spans for custom rendering instead of browser ruby HTML.</p>
-                <pre class="code-block"><code>{
+            <section id="structured" class="doc-section" aria-labelledby="features-title">
+              <h3 id="features-title">Structured ruby output</h3>
+              <p>
+                <code>includeKatakana</code> is useful when Katakana loanwords or names should also receive ruby.
+                <code>furigana_map</code> returns structured spans for custom rendering instead of browser ruby HTML.
+              </p>
+              <pre class="code-block"><code>{
   "text": "漢字とカタカナ",
   "ruby": [
     { "s": 0, "e": 2, "rt": "かんじ" },
@@ -191,347 +348,320 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
 }</code></pre>
             </section>
 
-            <section class="doc-section" aria-labelledby="analyzer-title">
-                <h3 id="analyzer-title">Browser dictionary files</h3>
-                <p>Browser usage needs Kuromoji dictionary files in addition to the script bundles. For this GitHub Pages demo, those files live in <code>docs/dict/</code> and are served from <code>/kuroshiro-enhance/dict/</code>.</p>
-                <ul class="inline-list">
-                    <li><code>kuroshiro.min.js</code></li>
-                    <li><code>kuroshiro-analyzer-kuromoji.min.js</code></li>
-                    <li><code>dict/*.dat.gz</code></li>
-                </ul>
+            <section id="analyzer" class="doc-section" aria-labelledby="analyzer-title">
+              <h3 id="analyzer-title">Browser dictionary files</h3>
+              <p>
+                Browser usage needs Kuromoji dictionary files in addition to the script bundles. For this GitHub Pages
+                demo, those files live in
+                <code>docs/dict/</code> and are served from <code>/kuroshiro-enhance/dict/</code>.
+              </p>
+              <ul class="inline-list">
+                <li><code>kuroshiro.min.js</code></li>
+                <li><code>kuroshiro-analyzer-kuromoji.min.js</code></li>
+                <li><code>dict/*.dat.gz</code></li>
+              </ul>
             </section>
-        </section>
+          </div>
+        </div>
+      </section>
     </main>
 
+    <footer class="ke-footer">
+      <div class="ke-footer-inner">
+        <img src="favicon.svg" alt="kuroshiro-enhance logo" class="footer-mark" />
+        <span class="footer-text">kuroshiro-enhance<span class="dot">·</span> MIT licensed</span>
+      </div>
+    </footer>
+
+    <!-- kuroshiro libs -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://unpkg.com/kuroshiro-enhance@latest/dist/kuroshiro.min.js"></script>
     <script src="https://unpkg.com/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const comparisonText = '最後のステージから over and over';
-            const comparisonModes = ['normal', 'spaced', 'okurigana', 'furigana', 'furigana_map'];
-            const modeLabels = {
-                normal: 'Plain conversion without token spaces.',
-                spaced: 'Plain conversion with spaces between tokens.',
-                okurigana: 'Original text with readings in delimiters.',
-                furigana: 'Ruby HTML for browser rendering.',
-                furigana_map: 'Structured ruby spans for custom renderers.'
-            };
+      // Init lucide icons asap (and re-run whenever we replace innerHTML)
+      function refreshIcons() {
+        if (window.lucide && lucide.createIcons) lucide.createIcons();
+      }
+      refreshIcons();
 
-            const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
-            const kuroshiro = new KuroshiroClass();
+      document.addEventListener("DOMContentLoaded", () => {
+        refreshIcons();
 
-            const convertBtn = document.getElementById('convertBtn');
-            const inputText = document.getElementById('inputText');
-            const resultDiv = document.getElementById('result');
-            const targetSyllabary = document.getElementById('targetSyllabary');
-            const conversionMode = document.getElementById('conversionMode');
-            const includeKatakana = document.getElementById('includeKatakana');
-            const copyBtn = document.getElementById('copyBtn');
-            const comparisonGrid = document.getElementById('comparisonGrid');
+        const comparisonText = "最後のステージから over and over";
+        const comparisonModes = ["normal", "spaced", "okurigana", "furigana", "furigana_map"];
+        const modeLabels = {
+          normal: "Plain conversion without token spaces.",
+          spaced: "Plain conversion with spaces between tokens.",
+          okurigana: "Original text with readings in delimiters.",
+          furigana: "Ruby HTML for browser rendering.",
+          furigana_map: "Structured ruby spans for custom renderers.",
+        };
 
-            let lastResult = '';
-            let isReady = false;
-            let debounceTimer = null;
-            let conversionRunId = 0;
-            let comparisonRunId = 0;
+        const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
+        const kuroshiro = new KuroshiroClass();
 
-            function updateCopyButtonLabel() {
-                copyBtn.textContent = 'Copy result';
-                copyBtn.classList.remove('copied');
+        const convertBtn = document.getElementById("convertBtn");
+        const inputText = document.getElementById("inputText");
+        const resultDiv = document.getElementById("result");
+        const targetSyllabary = document.getElementById("targetSyllabary");
+        const conversionMode = document.getElementById("conversionMode");
+        const includeKatakana = document.getElementById("includeKatakana");
+        const copyBtn = document.getElementById("copyBtn");
+        const comparisonGrid = document.getElementById("comparisonGrid");
+
+        let lastResult = "";
+        let isReady = false;
+        let debounceTimer = null;
+        let conversionRunId = 0;
+        let comparisonRunId = 0;
+
+        function setCopyLabel(text, copied) {
+          const lbl = copyBtn.querySelector(".copy-label");
+          if (lbl) lbl.textContent = text;
+          copyBtn.classList.toggle("copied", !!copied);
+        }
+
+        function copyResultToClipboard() {
+          if (!lastResult) return;
+          const markCopied = () => {
+            setCopyLabel("Copied", true);
+            setTimeout(() => setCopyLabel("Copy result", false), 2000);
+          };
+          const fallbackCopy = () => {
+            const textArea = document.createElement("textarea");
+            textArea.value = lastResult;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            markCopied();
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard
+              .writeText(lastResult)
+              .then(markCopied)
+              .catch(() => fallbackCopy());
+          } else {
+            fallbackCopy();
+          }
+        }
+
+        function renderSafeFurigana(container, html) {
+          const template = document.createElement("template");
+          template.innerHTML = html;
+          const allowedTags = new Set(["RUBY", "RP", "RT", "RB"]);
+
+          function sanitizeNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) return document.createTextNode(node.textContent);
+            if (node.nodeType !== Node.ELEMENT_NODE) return document.createTextNode("");
+            if (!allowedTags.has(node.tagName)) {
+              const fragment = document.createDocumentFragment();
+              node.childNodes.forEach((child) => fragment.appendChild(sanitizeNode(child)));
+              return fragment;
             }
+            const clean = document.createElement(node.tagName.toLowerCase());
+            node.childNodes.forEach((child) => clean.appendChild(sanitizeNode(child)));
+            return clean;
+          }
 
-            function copyResultToClipboard() {
-                if (!lastResult) return;
+          container.replaceChildren();
+          template.content.childNodes.forEach((node) => container.appendChild(sanitizeNode(node)));
+        }
 
-                const markCopied = () => {
-                    copyBtn.textContent = 'Copied';
-                    copyBtn.classList.add('copied');
-                    setTimeout(updateCopyButtonLabel, 2000);
-                };
+        function getDictionaryPath() {
+          const pageUrl = new URL(window.location.href);
+          let basePath = pageUrl.pathname;
+          if (!basePath.endsWith("/")) {
+            const lastPathSegment = basePath.slice(basePath.lastIndexOf("/") + 1);
+            basePath = lastPathSegment.includes(".")
+              ? basePath.slice(0, basePath.lastIndexOf("/") + 1)
+              : `${basePath}/`;
+          }
+          return `${basePath}dict/`;
+        }
 
-                const fallbackCopy = () => {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = lastResult;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    markCopied();
-                };
+        function buildOptions(mode) {
+          const options = {
+            to: targetSyllabary.value,
+            mode,
+            romajiSystem: "hepburn",
+          };
+          if (mode === "furigana" || mode === "furigana_map")
+            options.includeKatakana = includeKatakana.value === "true";
+          return options;
+        }
 
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(lastResult)
-                        .then(markCopied)
-                        .catch(err => {
-                            console.error('Copy failed:', err);
-                            fallbackCopy();
-                        });
-                    return;
-                }
+        function buildComparisonOptions(mode) {
+          const options = { to: targetSyllabary.value, mode };
+          if (mode === "furigana" || mode === "furigana_map") options.includeKatakana = true;
+          return options;
+        }
 
-                fallbackCopy();
+        function resetResultClasses(container) {
+          container.classList.remove("json-mode", "error", "loading");
+        }
+
+        function renderResult(container, mode, result) {
+          resetResultClasses(container);
+          if (typeof result === "object" && result !== null) {
+            container.classList.add("json-mode");
+            container.textContent = JSON.stringify(result, null, 2);
+            return;
+          }
+          if (mode === "furigana") {
+            renderSafeFurigana(container, result);
+            return;
+          }
+          container.textContent = result;
+        }
+
+        function renderError(container, error) {
+          resetResultClasses(container);
+          container.classList.add("error");
+          container.textContent = error && error.message ? error.message : String(error);
+        }
+
+        async function performConversion() {
+          const runId = ++conversionRunId;
+          const text = inputText.value;
+          if (!text.trim()) {
+            resultDiv.textContent = "";
+            resetResultClasses(resultDiv);
+            copyBtn.style.display = "none";
+            lastResult = "";
+            return;
+          }
+          resultDiv.className = "result-box loading";
+          resultDiv.textContent = "Converting…";
+          copyBtn.style.display = "none";
+          setCopyLabel("Copy result", false);
+
+          const mode = conversionMode.value;
+          const options = buildOptions(mode);
+          try {
+            const result = await kuroshiro.convert(text, options);
+            if (runId !== conversionRunId) return;
+            resultDiv.className = "result-box";
+            renderResult(resultDiv, mode, result);
+            lastResult = typeof result === "object" && result !== null ? JSON.stringify(result, null, 2) : result;
+            if (lastResult && String(lastResult).trim()) {
+              copyBtn.style.display = "inline-flex";
+              refreshIcons();
             }
+          } catch (err) {
+            if (runId !== conversionRunId) return;
+            resultDiv.className = "result-box";
+            renderError(resultDiv, err);
+            copyBtn.style.display = "none";
+            lastResult = "";
+            console.error(err);
+          }
+        }
 
-            function renderSafeFurigana(container, html) {
-                const template = document.createElement('template');
-                template.innerHTML = html;
-                const allowedTags = new Set(['RUBY', 'RP', 'RT', 'RB']);
+        function createComparisonCard(mode) {
+          const card = document.createElement("article");
+          card.className = mode === "furigana_map" ? "comparison-card wide" : "comparison-card";
 
-                function sanitizeNode(node) {
-                    if (node.nodeType === Node.TEXT_NODE) {
-                        return document.createTextNode(node.textContent);
-                    }
+          const head = document.createElement("div");
+          head.className = "comparison-head";
 
-                    if (node.nodeType !== Node.ELEMENT_NODE) {
-                        return document.createTextNode('');
-                    }
+          const title = document.createElement("div");
+          title.className = "mode-name";
+          title.textContent = mode;
 
-                    if (!allowedTags.has(node.tagName)) {
-                        const fragment = document.createDocumentFragment();
-                        node.childNodes.forEach(child => {
-                            fragment.appendChild(sanitizeNode(child));
-                        });
-                        return fragment;
-                    }
+          const note = document.createElement("div");
+          note.className = "mode-note";
+          note.textContent = modeLabels[mode];
 
-                    const clean = document.createElement(node.tagName.toLowerCase());
-                    node.childNodes.forEach(child => {
-                        clean.appendChild(sanitizeNode(child));
-                    });
-                    return clean;
-                }
+          head.append(title, note);
 
-                container.replaceChildren();
-                template.content.childNodes.forEach(node => {
-                    container.appendChild(sanitizeNode(node));
-                });
-            }
+          const body = document.createElement("div");
+          body.className = "comparison-body";
 
-            function getDictionaryPath() {
-                const pageUrl = new URL(window.location.href);
-                let basePath = pageUrl.pathname;
+          const options = document.createElement("pre");
+          options.className = "options-snippet code-block";
 
-                if (!basePath.endsWith('/')) {
-                    const lastPathSegment = basePath.slice(basePath.lastIndexOf('/') + 1);
-                    basePath = lastPathSegment.includes('.')
-                        ? basePath.slice(0, basePath.lastIndexOf('/') + 1)
-                        : `${basePath}/`;
-                }
+          const result = document.createElement("div");
+          result.className = "result-box compact loading";
+          result.textContent = "Converting…";
 
-                return `${basePath}dict/`;
-            }
+          body.append(options, result);
+          card.append(head, body);
+          return { card, options, result };
+        }
 
-            function buildOptions(mode) {
-                const options = {
-                    to: targetSyllabary.value,
-                    mode,
-                    romajiSystem: 'hepburn'
-                };
+        async function performModeComparison() {
+          const runId = ++comparisonRunId;
+          comparisonGrid.replaceChildren();
+          const renderedCards = comparisonModes.map((mode) => {
+            const elements = createComparisonCard(mode);
+            const options = buildComparisonOptions(mode);
+            elements.options.textContent = JSON.stringify(options, null, 2);
+            comparisonGrid.appendChild(elements.card);
+            return { mode, options, resultEl: elements.result };
+          });
+          const conversions = renderedCards.map((item) =>
+            kuroshiro.convert(comparisonText, item.options).then((result) => ({ mode: item.mode, result }))
+          );
+          const settled = await Promise.allSettled(conversions);
+          if (runId !== comparisonRunId) return;
+          settled.forEach((outcome, index) => {
+            const target = renderedCards[index].resultEl;
+            target.className = "result-box compact";
+            if (outcome.status === "fulfilled") renderResult(target, outcome.value.mode, outcome.value.result);
+            else renderError(target, outcome.reason);
+          });
+        }
 
-                if (mode === 'furigana' || mode === 'furigana_map') {
-                    options.includeKatakana = includeKatakana.value === 'true';
-                }
+        function runConversion() {
+          if (isReady) performConversion();
+        }
+        function runConversionAndComparison() {
+          if (isReady) {
+            performConversion();
+            performModeComparison();
+          }
+        }
+        function scheduleConversion() {
+          if (!isReady) return;
+          window.clearTimeout(debounceTimer);
+          debounceTimer = window.setTimeout(runConversion, 250);
+        }
 
-                return options;
-            }
+        kuroshiro
+          .init(new KuromojiAnalyzer({ dictPath: getDictionaryPath() }))
+          .then(() => {
+            isReady = true;
+            convertBtn.disabled = false;
+            convertBtn.querySelector(".btn-label").textContent = "Convert";
+            convertBtn.querySelector("[data-lucide]").setAttribute("data-lucide", "play");
+            convertBtn.querySelector("[data-lucide]").classList.remove("spin");
+            refreshIcons();
+            inputText.disabled = false;
+            targetSyllabary.disabled = false;
+            conversionMode.disabled = false;
+            includeKatakana.disabled = false;
+            runConversion();
+            performModeComparison();
+          })
+          .catch((err) => {
+            resultDiv.className = "result-box error";
+            resultDiv.textContent = `Initialization failed: ${err.message}`;
+            comparisonGrid.replaceChildren();
+            console.error(err);
+          });
 
-            function buildComparisonOptions(mode) {
-                const options = {
-                    to: targetSyllabary.value,
-                    mode,
-                };
-
-                if (mode === 'furigana' || mode === 'furigana_map') {
-                    options.includeKatakana = true;
-                }
-
-                return options;
-            }
-
-            function resetResultClasses(container) {
-                container.classList.remove('json-mode', 'error', 'loading');
-            }
-
-            function renderResult(container, mode, result) {
-                resetResultClasses(container);
-
-                if (typeof result === 'object' && result !== null) {
-                    container.classList.add('json-mode');
-                    container.textContent = JSON.stringify(result, null, 2);
-                    return;
-                }
-
-                if (mode === 'furigana') {
-                    renderSafeFurigana(container, result);
-                    return;
-                }
-
-                container.textContent = result;
-            }
-
-            function renderError(container, error) {
-                resetResultClasses(container);
-                container.classList.add('error');
-                container.textContent = error && error.message ? error.message : String(error);
-            }
-
-            async function performConversion() {
-                const runId = ++conversionRunId;
-                const text = inputText.value;
-
-                if (!text.trim()) {
-                    resultDiv.textContent = '';
-                    resetResultClasses(resultDiv);
-                    copyBtn.style.display = 'none';
-                    lastResult = '';
-                    return;
-                }
-
-                resultDiv.className = 'result-box loading';
-                resultDiv.textContent = 'Converting...';
-                copyBtn.style.display = 'none';
-                updateCopyButtonLabel();
-
-                const mode = conversionMode.value;
-                const options = buildOptions(mode);
-
-                try {
-                    const result = await kuroshiro.convert(text, options);
-                    if (runId !== conversionRunId) return;
-
-                    resultDiv.className = 'result-box';
-                    renderResult(resultDiv, mode, result);
-                    lastResult = typeof result === 'object' && result !== null
-                        ? JSON.stringify(result, null, 2)
-                        : result;
-
-                    if (lastResult && String(lastResult).trim()) {
-                        copyBtn.style.display = 'inline-flex';
-                    }
-                } catch (err) {
-                    if (runId !== conversionRunId) return;
-                    resultDiv.className = 'result-box';
-                    renderError(resultDiv, err);
-                    copyBtn.style.display = 'none';
-                    lastResult = '';
-                    console.error(err);
-                }
-            }
-
-            function createComparisonCard(mode) {
-                const card = document.createElement('article');
-                card.className = mode === 'furigana_map' ? 'comparison-card wide' : 'comparison-card';
-
-                const head = document.createElement('div');
-                head.className = 'comparison-head';
-
-                const title = document.createElement('div');
-                title.className = 'mode-name';
-                title.textContent = mode;
-
-                const note = document.createElement('div');
-                note.className = 'mode-note';
-                note.textContent = modeLabels[mode];
-
-                head.append(title, note);
-
-                const body = document.createElement('div');
-                body.className = 'comparison-body';
-
-                const options = document.createElement('pre');
-                options.className = 'options-snippet code-block';
-
-                const result = document.createElement('div');
-                result.className = 'result-box compact loading';
-                result.textContent = 'Converting...';
-
-                body.append(options, result);
-                card.append(head, body);
-
-                return { card, options, result };
-            }
-
-            async function performModeComparison() {
-                const runId = ++comparisonRunId;
-
-                comparisonGrid.replaceChildren();
-
-                const renderedCards = comparisonModes.map(mode => {
-                    const elements = createComparisonCard(mode);
-                    const options = buildComparisonOptions(mode);
-                    elements.options.textContent = JSON.stringify(options, null, 2);
-                    comparisonGrid.appendChild(elements.card);
-                    return { mode, options, resultEl: elements.result };
-                });
-
-                const conversions = renderedCards.map(item =>
-                    kuroshiro.convert(comparisonText, item.options)
-                        .then(result => ({ mode: item.mode, result }))
-                );
-
-                const settled = await Promise.allSettled(conversions);
-                if (runId !== comparisonRunId) return;
-
-                settled.forEach((outcome, index) => {
-                    const target = renderedCards[index].resultEl;
-                    target.className = 'result-box compact';
-
-                    if (outcome.status === 'fulfilled') {
-                        renderResult(target, outcome.value.mode, outcome.value.result);
-                    } else {
-                        renderError(target, outcome.reason);
-                    }
-                });
-            }
-
-            function runConversion() {
-                if (!isReady) return;
-                performConversion();
-            }
-
-            function runConversionAndComparison() {
-                if (!isReady) return;
-                performConversion();
-                performModeComparison();
-            }
-
-            function scheduleConversion() {
-                if (!isReady) return;
-                window.clearTimeout(debounceTimer);
-                debounceTimer = window.setTimeout(runConversion, 250);
-            }
-
-            kuroshiro.init(new KuromojiAnalyzer({ dictPath: getDictionaryPath() }))
-                .then(() => {
-                    isReady = true;
-                    convertBtn.disabled = false;
-                    convertBtn.textContent = 'Convert';
-                    inputText.disabled = false;
-                    targetSyllabary.disabled = false;
-                    conversionMode.disabled = false;
-                    includeKatakana.disabled = false;
-                    runConversion();
-                    performModeComparison();
-                })
-                .catch(err => {
-                    resultDiv.className = 'result-box error';
-                    resultDiv.textContent = `Initialization failed: ${err.message}`;
-                    comparisonGrid.replaceChildren();
-                    console.error(err);
-                });
-
-            convertBtn.addEventListener('click', () => {
-                window.clearTimeout(debounceTimer);
-                runConversion();
-            });
-            copyBtn.addEventListener('click', copyResultToClipboard);
-            inputText.addEventListener('input', scheduleConversion);
-            targetSyllabary.addEventListener('change', runConversionAndComparison);
-            conversionMode.addEventListener('change', performConversion);
-            includeKatakana.addEventListener('change', runConversion);
+        convertBtn.addEventListener("click", () => {
+          window.clearTimeout(debounceTimer);
+          runConversion();
         });
+        copyBtn.addEventListener("click", copyResultToClipboard);
+        inputText.addEventListener("input", scheduleConversion);
+        targetSyllabary.addEventListener("change", runConversionAndComparison);
+        conversionMode.addEventListener("change", performConversion);
+        includeKatakana.addEventListener("change", runConversion);
+      });
     </script>
-</body>
-
+  </body>
 </html>
