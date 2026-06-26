@@ -14,15 +14,15 @@
     />
     <meta name="author" content="gene891212" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://gene891212.github.io/kuroshiro-enhance/" />
+    <link rel="canonical" href="https://kuroshiro-enhance.hsiehmin.com/" />
     <meta property="og:title" content="kuroshiro-enhance Demo | Japanese Kana, Romaji & Furigana Converter" />
     <meta
       property="og:description"
       content="Convert Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana, Katakana ruby annotations, and structured ruby output."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://gene891212.github.io/kuroshiro-enhance/" />
-    <meta property="og:image" content="https://gene891212.github.io/kuroshiro-enhance/demo.png" />
+    <meta property="og:url" content="https://kuroshiro-enhance.hsiehmin.com/" />
+    <meta property="og:image" content="https://kuroshiro-enhance.hsiehmin.com/demo.png" />
     <meta
       property="og:image:alt"
       content="kuroshiro-enhance demo showing Japanese conversion output with furigana options."
@@ -34,8 +34,23 @@
       name="twitter:description"
       content="Convert Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana, Katakana ruby annotations, and structured ruby output."
     />
-    <meta name="twitter:image" content="https://gene891212.github.io/kuroshiro-enhance/demo.png" />
+    <meta name="twitter:image" content="https://kuroshiro-enhance.hsiehmin.com/demo.png" />
     <meta name="theme-color" content="#f7f4ed" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "kuroshiro-enhance",
+      "description": "A JavaScript library for converting Japanese text to Hiragana, Katakana, or Romaji with furigana, okurigana, and structured ruby output.",
+      "url": "https://kuroshiro-enhance.hsiehmin.com/",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web, Node.js",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "softwareVersion": "2.0.0",
+      "license": "https://opensource.org/licenses/MIT",
+      "codeRepository": "https://github.com/gene891212/kuroshiro-enhance"
+    }
+    </script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -253,7 +268,7 @@
   const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
   const kuroshiro = new KuroshiroClass();
 
-  await kuroshiro.init(new KuromojiAnalyzer({ dictPath: "/kuroshiro-enhance/dict/" }));
+  await kuroshiro.init(new KuromojiAnalyzer({ dictPath: "/dict/" }));
   const result = await kuroshiro.convert("漢字とカタカナ", {
     to: "hiragana",
     mode: "furigana",
@@ -374,7 +389,6 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
     </footer>
 
     <!-- kuroshiro libs -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://unpkg.com/kuroshiro-enhance@latest/dist/kuroshiro.min.js"></script>
     <script src="https://unpkg.com/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
 
