@@ -16,6 +16,7 @@
     "dist"
   ],
   "scripts": {
+    "prepare": "husky install",
     "dev": "tsup --watch",
     "build": "cross-env NODE_ENV=production tsup && node -e \"const fs=require('fs'); fs.renameSync('dist/index.global.js', 'dist/kuroshiro.min.js'); fs.renameSync('dist/index.global.js.map', 'dist/kuroshiro.min.js.map');\"",
     "test": "vitest run",
@@ -23,13 +24,15 @@
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src test",
-    "clean": "rimraf lib dist coverage"
+    "clean": "rimraf dist coverage"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gene891212/kuroshiro-enhance.git"
   },
   "keywords": [
+    "kuroshiro",
+    "kuroshiro-enhance",
     "Japanese",
     "language",
     "convert",
@@ -56,14 +59,12 @@
   },
   "homepage": "https://github.com/gene891212/kuroshiro-enhance",
   "dependencies": {
-    "@babel/runtime": "^7.14.0",
     "kuromoji": "^0.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^18.0.0",
     "@vitest/coverage-v8": "^1.2.2",
-    "coveralls": "^3.1.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.0.0",
     "husky": "^8.0.3",
@@ -77,11 +78,6 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "src/**/*.{js,ts}": "eslint",
