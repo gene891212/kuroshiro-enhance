@@ -1546,9 +1546,18 @@ const patchTokens = function (tokens: Token[]): Token[] {
  * @param {string} str Given string
  * @return {string} Hiragana string
  */
-const kanaToHiragna = function (str: string) {
+const kanaToHiragana = function (str: string) {
     return toRawHiragana(str);
 };
+
+/**
+ * Convert kana to hiragana
+ *
+ * @deprecated Misspelled legacy name. Use {@link kanaToHiragana} instead. Will be removed in the next major version.
+ * @param {string} str Given string
+ * @return {string} Hiragana string
+ */
+const kanaToHiragna = kanaToHiragana;
 
 /**
  * Convert kana to katakana
@@ -1589,6 +1598,7 @@ export {
     toRawHiragana,
     toRawKatakana,
     toRawRomaji,
+    kanaToHiragana,
     kanaToHiragna,
     kanaToKatakana,
     kanaToRomaji

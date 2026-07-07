@@ -15,6 +15,7 @@ import {
     toRawHiragana,
     toRawKatakana,
     toRawRomaji,
+    kanaToHiragana,
     kanaToHiragna,
     kanaToKatakana,
     kanaToRomaji
@@ -41,6 +42,8 @@ const Util = {
     hasKana,
     hasKanji,
     hasJapanese,
+    kanaToHiragana,
+    /** @deprecated Misspelled legacy name. Use kanaToHiragana instead. Will be removed in the next major version. */
     kanaToHiragna,
     kanaToKatakana,
     kanaToRomaji

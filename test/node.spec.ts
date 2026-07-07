@@ -85,6 +85,11 @@ describe("Kuroshiro Node Funtional Test", () => {
     });
     it("Kana to Hiragana", () => {
         const ori = "サカナ";
+        const result = Kuroshiro.Util.kanaToHiragana(ori);
+        expect(result).toEqual("さかな");
+    });
+    it("Kana to Hiragana (deprecated kanaToHiragna alias)", () => {
+        const ori = "サカナ";
         const result = Kuroshiro.Util.kanaToHiragna(ori);
         expect(result).toEqual("さかな");
     });

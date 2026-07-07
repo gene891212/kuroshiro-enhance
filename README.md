@@ -323,9 +323,11 @@ Check if input string has kanji.
 
 Check if input string has Japanese.
 
-#### kanaToHiragna(str)
+#### kanaToHiragana(str)
 
 Convert input kana string to hiragana.
+
+> The misspelled legacy name `kanaToHiragna` is kept as a deprecated alias and will be removed in the next major version.
 
 #### kanaToKatakana(str)
 
