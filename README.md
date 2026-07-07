@@ -18,7 +18,7 @@ Compared with the original kuroshiro, this fork adds structured ruby output and 
 | Basic conversion (Hiragana / Katakana / Romaji) | ✓ | ✓ |
 | Furigana and okurigana modes | ✓ | ✓ |
 | Katakana ruby annotations | - | ✓ (`includeKatakana`) |
-| Structured ruby output | - | ✓ (`furigana_map`) |
+| Structured ruby output | - | ✓ (`furigana_segments`) |
 
 ## Table of Contents
 
@@ -67,25 +67,36 @@ console.log(result);
 // <ruby>感<rp>(</rp><rt>かん</rt><rp>)</rp></ruby>じ<ruby>取<rp>(</rp><rt>と</rt><rp>)</rp></ruby>れたら<ruby>手<rp>(</rp><rt>て</rt><rp>)</rp></ruby>を<ruby>繋<rp>(</rp><rt>つな</rt><rp>)</rp></ruby>ごう
 ```
 
-Use `mode: "furigana_map"` when you need structured ruby spans instead of HTML:
+Use `mode: "furigana_segments"` when you need structured ruby data instead of HTML. It returns a flat array of segments that you can render with a single `map`, with no index bookkeeping:
 
 ```js
 const result = await kuroshiro.convert("古びたテディベア", {
   to: "hiragana",
-  mode: "furigana_map",
+  mode: "furigana_segments",
   includeKatakana: true,
 });
 
 console.log(result);
-// {
-//   text: "古びたテディベア",
-//   ruby: [
-//     { s: 0, e: 1, rt: "ふる" },
-//     { s: 3, e: 4, rt: "て" },
-//     ...
-//   ]
-// }
+// [
+//   { text: "古", ruby: "ふる" },
+//   { text: "びた" },
+//   { text: "テ", ruby: "て" },
+//   { text: "デ", ruby: "で" },
+//   ...
+// ]
 ```
+
+Rendering is a one-liner (React shown here); newlines come through as their own `{ text: "\n" }` segments:
+
+```jsx
+result.map((seg, i) =>
+  seg.text === "\n" ? <br key={i} />
+  : seg.ruby ? <ruby key={i}>{seg.text}<rt>{seg.ruby}</rt></ruby>
+  : seg.text,
+);
+```
+
+> `mode: "furigana_map"` still works but is **deprecated** and will be removed in the next major version. See the [convert options](#convertstr-options) below for migration.
 
 ## Usage
 
@@ -200,13 +211,15 @@ Convert given string to target syllabary with options available
 | Options                   | Type    | Default    | Description                                                                                           |
 | ------------------------- | ------- | ---------- | ----------------------------------------------------------------------------------------------------- |
 | to                        | String  | "hiragana" | Target syllabary [`hiragana`, `katakana`, `romaji`]                                                   |
-| mode                      | String  | "normal"   | Convert mode [`normal`, `spaced`, `okurigana`, `furigana`, `furigana_map`]                            |
-| includeKatakana           | boolean | false      | In `furigana` and `furigana_map` modes, also add ruby annotations to Katakana characters when `true`. |
+| mode                      | String  | "normal"   | Convert mode [`normal`, `spaced`, `okurigana`, `furigana`, `furigana_segments`, `furigana_map`<sup>†</sup>]                            |
+| includeKatakana           | boolean | false      | In `furigana`, `furigana_segments` and `furigana_map` modes, also add ruby annotations to Katakana characters when `true`. |
 | romajiSystem<sup>\*</sup> | String  | "hepburn"  | Romanization system [`nippon`, `passport`, `hepburn`]                                                 |
 | delimiter_start           | String  | "("        | Delimiter(Start)                                                                                      |
 | delimiter_end             | String  | ")"        | Delimiter(End)                                                                                        |
 
 \*_: Param `romajiSystem` is only applied when the value of param `to` is `romaji`. For more about it, check [Romanization System](#romanization-system)_
+
+†_: `furigana_map` is **deprecated** and will be removed in the next major version. Use `furigana_segments` instead — it returns easier-to-render data and covers the same cases. Calling `furigana_map` logs a one-time deprecation warning per instance._
 
 **Examples**
 
@@ -247,7 +260,33 @@ await kuroshiro.convert(
 ```
 
 ```js
-// furigana_map
+// furigana_segments
+await kuroshiro.convert("古びたテディベア", {
+  to: "hiragana",
+  mode: "furigana_segments",
+  includeKatakana: true,
+});
+// result:
+[
+  { "text": "古", "ruby": "ふる" },
+  { "text": "びた" },
+  { "text": "テ", "ruby": "て" },
+  { "text": "デ", "ruby": "で" },
+  { "text": "ィ", "ruby": "ぃ" },
+  { "text": "ベ", "ruby": "べ" },
+  { "text": "ア", "ruby": "あ" }
+]
+```
+
+Each entry is a `FuriganaSegment`:
+
+- `text`: A slice of the original input. Concatenating every `text` reproduces the input exactly.
+- `ruby`: The reading for that slice. Present only on segments that carry ruby (kanji, or katakana when `includeKatakana` is `true`); absent on plain text.
+
+Newlines are emitted as their own ruby-less segments (`{ text: "\n" }`) and never merged into surrounding text, so you can map them straight to `<br>`.
+
+```js
+// furigana_map (deprecated — use furigana_segments)
 await kuroshiro.convert("古びたテディベア", {
   to: "hiragana",
   mode: "furigana_map",
@@ -363,6 +402,11 @@ The kanji -> romaji conversion with/without furigana mode is **unaffected** by t
 ## Breaking Changes
 
 See [CHANGELOG.md](CHANGELOG.md) for version history.
+
+### Deprecations (still working, removed in the next major)
+
+- **`furigana_map` mode** → use [`furigana_segments`](#convertstr-options). It returns a flat `FuriganaSegment[]` that renders without index bookkeeping and handles newlines. Calling `furigana_map` logs a one-time warning per instance.
+- **`Kuroshiro.Util.kanaToHiragna`** → use `kanaToHiragana` (the old name was missing an "a").
 
 ### v2.x
 
