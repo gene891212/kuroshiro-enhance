@@ -20,7 +20,7 @@ import {
     kanaToKatakana,
     kanaToRomaji
 } from "./util.js";
-import type { Analyzer, ConvertOptions, FuriganaMapResult, Token } from "./types.js";
+import type { Analyzer, ConvertOptions, FuriganaMapResult, FuriganaSegment, Token } from "./types.js";
 
 /**
  * Internal notation tuple produced while building okurigana/furigana output.
@@ -55,6 +55,7 @@ const Util = {
 class Kuroshiro {
     static Util = Util;
     private _analyzer: Analyzer | null = null;
+    private _furiganaMapDeprecationWarned = false;
 
     /**
      * Initialize Kuroshiro
@@ -89,7 +90,7 @@ class Kuroshiro {
      * @param {string} [options.delimiter_end=")"] Delimiter(End)
      * @returns {Promise} Promise object represents the result of conversion
      */
-    async convert(str: string, options?: ConvertOptions): Promise<string | FuriganaMapResult> {
+    async convert(str: string, options?: ConvertOptions): Promise<string | FuriganaMapResult | FuriganaSegment[]> {
         options = options || {};
         options.to = options.to || "hiragana";
         options.mode = options.mode || "normal";
@@ -103,7 +104,7 @@ class Kuroshiro {
             throw new Error("Invalid Target Syllabary.");
         }
 
-        if (["normal", "spaced", "okurigana", "furigana", "furigana_map"].indexOf(options.mode) === -1) {
+        if (["normal", "spaced", "okurigana", "furigana", "furigana_segments", "furigana_map"].indexOf(options.mode) === -1) {
             throw new Error("Invalid Conversion Mode.");
         }
 
@@ -190,7 +191,7 @@ class Kuroshiro {
                     throw new Error("Unknown option.to param");
             }
         }
-        else if (options.mode === "okurigana" || options.mode === "furigana" || options.mode === "furigana_map") {
+        else if (options.mode === "okurigana" || options.mode === "furigana" || options.mode === "furigana_segments" || options.mode === "furigana_map") {
             const notations: Notation[] = [];
             for (let i = 0; i < tokens.length; i++) {
                 const strType = getStrType(tokens[i].surface_form);
@@ -252,47 +253,76 @@ class Kuroshiro {
                         throw new Error("Unknown strType");
                 }
             }
+            // Compute the ruby reading for a notation, or undefined when it carries none.
+            const rubyFor = (notation: Notation): string | undefined => {
+                const base = notation[0];
+                const typ = notation[1]; // 1=kanji, 2=kana, 3=others
+                const hira = notation[2];
+                const pron = notation[3];
+
+                let shouldRuby = false;
+                if (typ === 1) {
+                    shouldRuby = true; // kanji always get ruby
+                }
+                else if (typ === 2) {
+                    const isKatakanaLocal = base !== hira; // katakana differs from its hiragana form
+                    shouldRuby = !!options.includeKatakana && isKatakanaLocal;
+                }
+                if (!shouldRuby) return undefined;
+
+                switch (options.to) {
+                    case "katakana":
+                        return toRawKatakana(hira);
+                    case "romaji":
+                        return toRawRomaji(pron, options.romajiSystem);
+                    case "hiragana":
+                    default:
+                        return hira;
+                }
+            };
+
+            // Structured segment list: [{ text, ruby? }, ...]
+            if (options.mode === "furigana_segments") {
+                const isNewline = (ch: string) => ch === "\n" || ch === "\r";
+                const segments: FuriganaSegment[] = [];
+                for (let n = 0; n < notations.length; n++) {
+                    const base = notations[n][0];
+                    const ruby = rubyFor(notations[n]);
+                    if (ruby !== undefined) {
+                        segments.push({ text: base, ruby });
+                        continue;
+                    }
+                    // Ruby-less text: merge with the previous ruby-less run of the
+                    // same kind (newline vs non-newline); newlines never merge with text.
+                    const nl = isNewline(base[base.length - 1]);
+                    const last = segments[segments.length - 1];
+                    if (last && last.ruby === undefined && isNewline(last.text[last.text.length - 1]) === nl) {
+                        last.text += base;
+                    }
+                    else {
+                        segments.push({ text: base });
+                    }
+                }
+                return segments;
+            }
+
             // Special mode: return structured ruby span map { text, ruby: [{s,e,rt}] }
+            // @deprecated Use "furigana_segments" instead; will be removed in the next major version.
             if (options.mode === "furigana_map") {
-                // Build the plain text and span indices first
+                if (!this._furiganaMapDeprecationWarned) {
+                    this._furiganaMapDeprecationWarned = true;
+                    console.warn("[kuroshiro-enhance] mode \"furigana_map\" is deprecated and will be removed in the next major version; use \"furigana_segments\" instead.");
+                }
                 let text = "";
                 const ruby = [];
                 let cursor = 0;
                 for (let n = 0; n < notations.length; n++) {
                     const base = notations[n][0];
-                    const typ = notations[n][1]; // 1=kanji, 2=kana, 3=others
-                    const hira = notations[n][2];
-                    const pron = notations[n][3];
-
                     const start = cursor;
                     const end = start + base.length;
 
-                    // Decide whether this segment should carry ruby
-                    let shouldRuby = false;
-                    if (typ === 1) {
-                        // Kanji always get ruby
-                        shouldRuby = true;
-                    }
-                    else if (typ === 2) {
-                        // Kana only when includeKatakana and the original was katakana
-                        const isKatakanaLocal = base !== hira; // katakana differs from hiragana form
-                        shouldRuby = !!options.includeKatakana && isKatakanaLocal;
-                    }
-
-                    if (shouldRuby) {
-                        let rt;
-                        switch (options.to) {
-                            case "katakana":
-                                rt = toRawKatakana(hira);
-                                break;
-                            case "romaji":
-                                rt = toRawRomaji(pron, options.romajiSystem);
-                                break;
-                            case "hiragana":
-                            default:
-                                rt = hira;
-                                break;
-                        }
+                    const rt = rubyFor(notations[n]);
+                    if (rt !== undefined) {
                         ruby.push({ s: start, e: end, rt });
                     }
 

@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, vi } from "vitest";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import Kuroshiro from "../src/index";
 import { patchTokens } from "../src/util";
@@ -355,5 +355,152 @@ describe("Kuroshiro Node Funtional Test", () => {
                 { s: 7, e: 8, rt: "あ" }
             ]
         });
+    });
+    it("Kanji to Hiragana with furigana_segments(1)", async () => {
+        const ori = EXAMPLE_TEXT;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "hiragana" });
+        expect(result).toEqual([
+            { text: "感", ruby: "かん" },
+            { text: "じ" },
+            { text: "取", ruby: "と" },
+            { text: "れたら" },
+            { text: "手", ruby: "て" },
+            { text: "を" },
+            { text: "繋", ruby: "つな" },
+            { text: "ごう、" },
+            { text: "重", ruby: "かさ" },
+            { text: "なるのは" },
+            { text: "人生", ruby: "じんせい" },
+            { text: "のライン and レミリア" },
+            { text: "最高", ruby: "さいこう" },
+            { text: "！" }
+        ]);
+    });
+    it("Kanji to Hiragana with furigana_segments(2)", async () => {
+        const ori = EXAMPLE_TEXT2;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "hiragana" });
+        expect(result).toEqual([
+            { text: "ブラウン" },
+            { text: "管", ruby: "かん" },
+            { text: "への" },
+            { text: "愛", ruby: "あい" },
+            { text: "が" },
+            { text: "足", ruby: "た" },
+            { text: "りねぇな" }
+        ]);
+    });
+    it("Kanji to Hiragana with furigana_segments(3)", async () => {
+        const ori = EXAMPLE_TEXT3;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "hiragana" });
+        expect(result).toEqual([
+            { text: "関ヶ原", ruby: "せきがはら" },
+            { text: "の" },
+            { text: "戦", ruby: "たたか" },
+            { text: "い" }
+        ]);
+    });
+    it("Kanji to Katakana with furigana_segments", async () => {
+        const ori = EXAMPLE_TEXT;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "katakana" });
+        expect(result).toEqual([
+            { text: "感", ruby: "カン" },
+            { text: "じ" },
+            { text: "取", ruby: "ト" },
+            { text: "れたら" },
+            { text: "手", ruby: "テ" },
+            { text: "を" },
+            { text: "繋", ruby: "ツナ" },
+            { text: "ごう、" },
+            { text: "重", ruby: "カサ" },
+            { text: "なるのは" },
+            { text: "人生", ruby: "ジンセイ" },
+            { text: "のライン and レミリア" },
+            { text: "最高", ruby: "サイコウ" },
+            { text: "！" }
+        ]);
+    });
+    it("Kanji to Romaji with furigana_segments", async () => {
+        const ori = EXAMPLE_TEXT;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "romaji" });
+        expect(result).toEqual([
+            { text: "感", ruby: "kan" },
+            { text: "じ" },
+            { text: "取", ruby: "to" },
+            { text: "れたら" },
+            { text: "手", ruby: "te" },
+            { text: "を" },
+            { text: "繋", ruby: "tsuna" },
+            { text: "ごう、" },
+            { text: "重", ruby: "kasa" },
+            { text: "なるのは" },
+            { text: "人生", ruby: "jinsei" },
+            { text: "のライン and レミリア" },
+            { text: "最高", ruby: "saikō" },
+            { text: "！" }
+        ]);
+    });
+    it("Kanji to Hiragana with furigana_segments - includeKatakana(false)", async () => {
+        const ori = "古びたテディベア";
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "hiragana", includeKatakana: false });
+        expect(result).toEqual([
+            { text: "古", ruby: "ふる" },
+            { text: "びたテディベア" }
+        ]);
+    });
+    it("Kanji to Hiragana with furigana_segments - includeKatakana(true)", async () => {
+        const ori = "古びたテディベア";
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "hiragana", includeKatakana: true });
+        expect(result).toEqual([
+            { text: "古", ruby: "ふる" },
+            { text: "びた" },
+            { text: "テ", ruby: "て" },
+            { text: "デ", ruby: "で" },
+            { text: "ィ", ruby: "ぃ" },
+            { text: "ベ", ruby: "べ" },
+            { text: "ア", ruby: "あ" }
+        ]);
+    });
+    it("furigana_segments splits on a single newline", async () => {
+        const ori = "言い訳\n言い訳";
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "hiragana" });
+        expect(result).toEqual([
+            { text: "言", ruby: "い" },
+            { text: "い" },
+            { text: "訳", ruby: "わけ" },
+            { text: "\n" },
+            { text: "言", ruby: "い" },
+            { text: "い" },
+            { text: "訳", ruby: "わけ" }
+        ]);
+    });
+    it("furigana_segments keeps consecutive newlines as one segment and blocks merging", async () => {
+        const ori = "手を\n\n繋ごう";
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "hiragana" });
+        expect(result).toEqual([
+            { text: "手", ruby: "て" },
+            { text: "を" },
+            { text: "\n\n" },
+            { text: "繋", ruby: "つな" },
+            { text: "ごう" }
+        ]);
+    });
+    it("furigana_segments text joins back to the original input", async () => {
+        const ori = EXAMPLE_TEXT;
+        const result = await kuroshiro.convert(ori, { mode: "furigana_segments", to: "hiragana" });
+        expect(result.map((s: { text: string }) => s.text).join("")).toEqual(ori);
+    });
+    it("furigana_map warns about deprecation once and still returns the old format", async () => {
+        kuroshiro._furiganaMapDeprecationWarned = false;
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        try {
+            const result = await kuroshiro.convert(EXAMPLE_TEXT3, { mode: "furigana_map", to: "hiragana" });
+            await kuroshiro.convert(EXAMPLE_TEXT3, { mode: "furigana_map", to: "hiragana" });
+            expect(warnSpy).toHaveBeenCalledTimes(1);
+            expect(warnSpy.mock.calls[0][0]).toContain("furigana_map");
+            expect(result).toHaveProperty("ruby");
+        }
+        finally {
+            warnSpy.mockRestore();
+        }
     });
 });
