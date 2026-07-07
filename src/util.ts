@@ -508,7 +508,7 @@ const toRawRomaji = function (str: string, system?: string) {
             // ヴォ: "",
             // ヴュ: "",
             // ヴョ: "",
-            キェ: "kya",
+            キェ: "kye",
             // クァ: "",
             クィ: "kwi",
             クェ: "kwe",
@@ -1302,7 +1302,7 @@ const toRawRomaji = function (str: string, system?: string) {
             ヴォ: "vo",
             ヴュ: "vyu",
             ヴョ: "vyo",
-            キェ: "kya",
+            キェ: "kye",
             クァ: "kwa",
             クィ: "kwi",
             クェ: "kwe",
@@ -1479,63 +1479,65 @@ const getStrType = function (str: string) {
  * @return {Object} Patched tokens
  */
 const patchTokens = function (tokens: Token[]): Token[] {
+    const result: Token[] = tokens.map(t => ({ ...t }));
+
     // patch for token structure
-    for (let cr = 0; cr < tokens.length; cr++) {
-        if (hasJapanese(tokens[cr].surface_form)) {
-            if (!tokens[cr].reading) {
-                if (tokens[cr].surface_form.split("").every(isKana)) {
-                    tokens[cr].reading = toRawKatakana(tokens[cr].surface_form);
+    for (let cr = 0; cr < result.length; cr++) {
+        if (hasJapanese(result[cr].surface_form)) {
+            if (!result[cr].reading) {
+                if (result[cr].surface_form.split("").every(isKana)) {
+                    result[cr].reading = toRawKatakana(result[cr].surface_form);
                 }
                 else {
-                    tokens[cr].reading = tokens[cr].surface_form;
+                    result[cr].reading = result[cr].surface_form;
                 }
             }
-            else if (hasHiragana(tokens[cr].reading!)) {
-                tokens[cr].reading = toRawKatakana(tokens[cr].reading!);
+            else if (hasHiragana(result[cr].reading!)) {
+                result[cr].reading = toRawKatakana(result[cr].reading!);
             }
         }
         else {
-            tokens[cr].reading = tokens[cr].surface_form;
+            result[cr].reading = result[cr].surface_form;
         }
     }
 
     // patch for 助動詞"う" after 動詞
-    for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i].pos && tokens[i].pos === "助動詞" && (tokens[i].surface_form === "う" || tokens[i].surface_form === "ウ")) {
-            if (i - 1 >= 0 && tokens[i - 1].pos && tokens[i - 1].pos === "動詞") {
-                tokens[i - 1].surface_form += "う";
-                if (tokens[i - 1].pronunciation) {
-                    tokens[i - 1].pronunciation += "ー";
+    for (let i = 0; i < result.length; i++) {
+        if (result[i].pos && result[i].pos === "助動詞" && (result[i].surface_form === "う" || result[i].surface_form === "ウ")) {
+            if (i - 1 >= 0 && result[i - 1].pos && result[i - 1].pos === "動詞") {
+                result[i - 1].surface_form += "う";
+                if (result[i - 1].pronunciation) {
+                    result[i - 1].pronunciation += "ー";
                 }
                 else {
-                    tokens[i - 1].pronunciation = `${tokens[i - 1].reading ?? ""}ー`;
+                    result[i - 1].pronunciation = `${result[i - 1].reading ?? ""}ー`;
                 }
-                tokens[i - 1].reading = (tokens[i - 1].reading ?? "") + "ウ";
-                tokens.splice(i, 1);
+                result[i - 1].reading = (result[i - 1].reading ?? "") + "ウ";
+                result.splice(i, 1);
                 i--;
             }
         }
     }
 
     // patch for "っ" at the tail of 動詞、形容詞
-    for (let j = 0; j < tokens.length; j++) {
-        if (tokens[j].pos && (tokens[j].pos === "動詞" || tokens[j].pos === "形容詞") && tokens[j].surface_form.length > 1 && (tokens[j].surface_form[tokens[j].surface_form.length - 1] === "っ" || tokens[j].surface_form[tokens[j].surface_form.length - 1] === "ッ")) {
-            if (j + 1 < tokens.length) {
-                tokens[j].surface_form += tokens[j + 1].surface_form;
-                if (tokens[j].pronunciation) {
-                    tokens[j].pronunciation += tokens[j + 1].pronunciation ?? "";
+    for (let j = 0; j < result.length; j++) {
+        if (result[j].pos && (result[j].pos === "動詞" || result[j].pos === "形容詞") && result[j].surface_form.length > 1 && (result[j].surface_form[result[j].surface_form.length - 1] === "っ" || result[j].surface_form[result[j].surface_form.length - 1] === "ッ")) {
+            if (j + 1 < result.length) {
+                result[j].surface_form += result[j + 1].surface_form;
+                if (result[j].pronunciation) {
+                    result[j].pronunciation += result[j + 1].pronunciation ?? "";
                 }
                 else {
-                    tokens[j].pronunciation = `${tokens[j].reading ?? ""}${tokens[j + 1].reading ?? ""}`;
+                    result[j].pronunciation = `${result[j].reading ?? ""}${result[j + 1].reading ?? ""}`;
                 }
-                tokens[j].reading = (tokens[j].reading ?? "") + (tokens[j + 1].reading ?? "");
-                tokens.splice(j + 1, 1);
+                result[j].reading = (result[j].reading ?? "") + (result[j + 1].reading ?? "");
+                result.splice(j + 1, 1);
                 j--;
             }
         }
     }
 
-    return tokens;
+    return result;
 };
 
 /**

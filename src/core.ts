@@ -28,6 +28,8 @@ import type { Analyzer, ConvertOptions, FuriganaMapResult, Token } from "./types
 type NotationType = 1 | 2 | 3;
 type Notation = [base: string, type: NotationType, hiragana: string, pronunciation: string];
 
+const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const Util = {
     isHiragana,
     isKatakana,
@@ -153,7 +155,7 @@ class Kuroshiro {
                                         hpattern += "(.*)";
                                     }
                                     else {
-                                        hpattern += isKatakana(tokens[hi].surface_form[hc]) ? toRawHiragana(tokens[hi].surface_form[hc]) : tokens[hi].surface_form[hc];
+                                        hpattern += isKatakana(tokens[hi].surface_form[hc]) ? toRawHiragana(tokens[hi].surface_form[hc]) : escapeRegExp(tokens[hi].surface_form[hc]);
                                     }
                                 }
                                 const hreg = new RegExp(hpattern);
@@ -211,7 +213,7 @@ class Kuroshiro {
                             else {
                                 isLastTokenKanji = false;
                                 subs.push(tokens[i].surface_form[c]);
-                                pattern += isKatakana(tokens[i].surface_form[c]) ? toRawHiragana(tokens[i].surface_form[c]) : tokens[i].surface_form[c];
+                                pattern += isKatakana(tokens[i].surface_form[c]) ? toRawHiragana(tokens[i].surface_form[c]) : escapeRegExp(tokens[i].surface_form[c]);
                             }
                         }
                         const reg = new RegExp(`^${pattern}$`);
