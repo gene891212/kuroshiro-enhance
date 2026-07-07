@@ -1,3 +1,32 @@
+<a name="2.1.0"></a>
+## [2.1.0](https://github.com/gene891212/kuroshiro-enhance/compare/v2.0.0...v2.1.0) (2026-07-07)
+
+### Feature
+
+* Add `furigana_segments` mode returning a flat `FuriganaSegment[]` (`{ text, ruby? }`) that renders without index bookkeeping and emits newlines as their own segments
+* Rename the `kanaToHiragana` util (it was previously misspelled `kanaToHiragna`)
+
+### Deprecations
+
+* `furigana_map` mode is deprecated in favor of `furigana_segments`; it still works and logs a one-time warning per instance, and will be removed in the next major version
+* `Kuroshiro.Util.kanaToHiragna` is kept as a deprecated alias of `kanaToHiragana` and will be removed in the next major version
+
+### Bug Fixes
+
+* Fix the package entry points: `main`/`module`/`exports` now match the actual build output (`index.js` for CommonJS, `index.mjs` for ESM). Previously `require()` resolved to a nonexistent `index.cjs` and `import` loaded the CommonJS file
+* Correct `キェ` romaji to `kye` in the nippon and hepburn systems
+* Escape regex metacharacters when building reading-match patterns, so surface forms containing characters like `(` `.` `*` no longer throw or mismatch
+* `patchTokens` no longer mutates the caller's token array
+
+### CI
+
+* Add a CI workflow running typecheck, lint, test and build on Node 18 and 20
+* Migrate husky to the v8 `.husky/` layout and drop the unused `@babel/runtime` and `coveralls` dependencies
+
+### Documents
+
+* Document `furigana_segments` and the `furigana_map` deprecation in the README
+
 <a name="2.0.0"></a>
 ## [2.0.0](https://github.com/gene891212/kuroshiro-enhance/compare/v1.4.1...v2.0.0) (2026-03-14)
 
