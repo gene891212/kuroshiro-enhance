@@ -46,7 +46,7 @@
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Web, Node.js",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "softwareVersion": "2.0.0",
+      "softwareVersion": "2.1.0",
       "license": "https://opensource.org/licenses/MIT",
       "codeRepository": "https://github.com/gene891212/kuroshiro-enhance"
     }
@@ -166,7 +166,8 @@
                   <label for="conversionMode">Mode</label>
                   <select id="conversionMode" disabled>
                     <option value="furigana">furigana</option>
-                    <option value="furigana_map">furigana_map</option>
+                    <option value="furigana_segments">furigana_segments</option>
+                    <option value="furigana_map">furigana_map (deprecated)</option>
                     <option value="okurigana">okurigana</option>
                     <option value="normal">normal</option>
                     <option value="spaced">spaced</option>
@@ -178,7 +179,7 @@
                     <option value="true">true</option>
                     <option value="false">false</option>
                   </select>
-                  <span class="hint">Applied to <code>furigana</code> and <code>furigana_map</code> only.</span>
+                  <span class="hint">Applied to <code>furigana</code>, <code>furigana_segments</code> and <code>furigana_map</code> only.</span>
                 </div>
               </div>
 
@@ -288,7 +289,7 @@ await kuroshiro.init(new KuromojiAnalyzer());
 
 const result = await kuroshiro.convert("漢字とカタカナ", {
   to: "hiragana",
-  mode: "furigana_map",
+  mode: "furigana_segments",
   includeKatakana: true
 });</code></pre>
             </section>
@@ -320,10 +321,11 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
                       <td><code>"normal"</code></td>
                       <td>
                         <code>"normal"</code>, <code>"spaced"</code>, <code>"okurigana"</code>, <code>"furigana"</code>,
-                        <code>"furigana_map"</code>
+                        <code>"furigana_segments"</code>, <code>"furigana_map"</code> <em>(deprecated)</em>
                       </td>
                       <td>
-                        Controls whether the result is plain text, annotated text, ruby HTML, or structured ruby spans.
+                        Controls whether the result is plain text, annotated text, ruby HTML, or a structured segment
+                        array. <code>furigana_map</code> is deprecated — use <code>furigana_segments</code> instead.
                       </td>
                     </tr>
                     <tr>
@@ -332,7 +334,7 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
                       <td><code>true</code>, <code>false</code></td>
                       <td>
                         Adds ruby annotations to Katakana segments in
-                        <code>furigana</code> and <code>furigana_map</code> modes.
+                        <code>furigana</code>, <code>furigana_segments</code> and <code>furigana_map</code> modes.
                       </td>
                     </tr>
                     <tr>
@@ -353,15 +355,17 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
               <h3 id="features-title">Structured ruby output</h3>
               <p>
                 <code>includeKatakana</code> is useful when Katakana loanwords or names should also receive ruby.
-                <code>furigana_map</code> returns structured spans for custom rendering instead of browser ruby HTML.
+                <code>furigana_segments</code> returns a flat segment array for custom rendering instead of browser ruby
+                HTML — each segment is a slice of the input, with a <code>ruby</code> reading only where one applies.
               </p>
-              <pre class="code-block"><code>{
-  "text": "漢字とカタカナ",
-  "ruby": [
-    { "s": 0, "e": 2, "rt": "かんじ" },
-    { "s": 3, "e": 7, "rt": "かたかな" }
-  ]
-}</code></pre>
+              <pre class="code-block"><code>[
+  { "text": "漢字", "ruby": "かんじ" },
+  { "text": "と" },
+  { "text": "カ", "ruby": "か" },
+  { "text": "タ", "ruby": "た" },
+  { "text": "カ", "ruby": "か" },
+  { "text": "ナ", "ruby": "な" }
+]</code></pre>
             </section>
 
             <section id="analyzer" class="doc-section" aria-labelledby="analyzer-title">
@@ -404,13 +408,14 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
         refreshIcons();
 
         const comparisonText = "最後のステージから over and over";
-        const comparisonModes = ["normal", "spaced", "okurigana", "furigana", "furigana_map"];
+        const comparisonModes = ["normal", "spaced", "okurigana", "furigana", "furigana_segments", "furigana_map"];
         const modeLabels = {
           normal: "Plain conversion without token spaces.",
           spaced: "Plain conversion with spaces between tokens.",
           okurigana: "Original text with readings in delimiters.",
           furigana: "Ruby HTML for browser rendering.",
-          furigana_map: "Structured ruby spans for custom renderers.",
+          furigana_segments: "Structured segment array for custom renderers.",
+          furigana_map: "Deprecated — structured ruby spans; use furigana_segments.",
         };
 
         const KuroshiroClass = window.Kuroshiro.default || window.Kuroshiro;
@@ -502,14 +507,14 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
             mode,
             romajiSystem: "hepburn",
           };
-          if (mode === "furigana" || mode === "furigana_map")
+          if (mode === "furigana" || mode === "furigana_segments" || mode === "furigana_map")
             options.includeKatakana = includeKatakana.value === "true";
           return options;
         }
 
         function buildComparisonOptions(mode) {
           const options = { to: targetSyllabary.value, mode };
-          if (mode === "furigana" || mode === "furigana_map") options.includeKatakana = true;
+          if (mode === "furigana" || mode === "furigana_segments" || mode === "furigana_map") options.includeKatakana = true;
           return options;
         }
 
@@ -576,7 +581,7 @@ const result = await kuroshiro.convert("漢字とカタカナ", {
 
         function createComparisonCard(mode) {
           const card = document.createElement("article");
-          card.className = mode === "furigana_map" ? "comparison-card wide" : "comparison-card";
+          card.className = mode === "furigana_segments" || mode === "furigana_map" ? "comparison-card wide" : "comparison-card";
 
           const head = document.createElement("div");
           head.className = "comparison-head";
