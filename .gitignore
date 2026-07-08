@@ -31,3 +31,5 @@ package-lock.json
 *.map
 tmp
 !**/.gitkeep
+.wrangler
+.claude
